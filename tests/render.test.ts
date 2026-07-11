@@ -8,7 +8,8 @@ import {
 	renderHowToUse,
 	renderMetaTable,
 	renderNote,
-	renderTagChips
+	renderTagChips,
+	renderTagFilterChips
 } from "../src/render";
 import type { Category, Skill } from "../src/types";
 
@@ -43,6 +44,26 @@ describe("renderTagChips", () => {
 
 	it("renders nothing for undefined tags", () => {
 		expect(renderTagChips(undefined)).toBe("");
+	});
+});
+
+describe("renderTagFilterChips", () => {
+	it("renders one toggle button per tag with a data-tag attribute", () => {
+		const html = renderTagFilterChips(["git", "debugging"]);
+		expect(html).toContain('<button type="button" class="tag-filter-chip" data-tag="git" aria-pressed="false">git</button>');
+		expect(html).toContain(
+			'<button type="button" class="tag-filter-chip" data-tag="debugging" aria-pressed="false">debugging</button>'
+		);
+	});
+
+	it("renders nothing for an empty tag list", () => {
+		expect(renderTagFilterChips([])).toBe("");
+	});
+
+	it("escapes tag values to prevent attribute-injection XSS", () => {
+		const html = renderTagFilterChips(['" onmouseover="alert(1)']);
+		expect(html).not.toContain('" onmouseover="alert(1)"');
+		expect(html).toContain("&quot; onmouseover=&quot;alert(1)");
 	});
 });
 

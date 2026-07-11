@@ -45,6 +45,7 @@ function setupDom(): void {
 		<button id="expandAll"><span class="btn-icon"></span>Expand all</button>
 		<button id="collapseAll"><span class="btn-icon"></span>Collapse all</button>
 		<div class="summary-counts" id="summaryCounts"></div>
+		<div class="tag-filter" id="tagFilter"></div>
 		<main id="app"></main>
 		<script type="application/json" id="config-data">${JSON.stringify(config)}</script>
 		<script type="application/json" id="skills-data">${JSON.stringify(data)}</script>
@@ -88,6 +89,76 @@ describe("boot", () => {
 		const initialTheme = document.documentElement.dataset.theme;
 		toggle.click();
 		expect(document.documentElement.dataset.theme).not.toBe(initialTheme);
+	});
+
+	it("renders one filter chip per unique tag across all skills", () => {
+		boot(document, window);
+		const chips = Array.from(document.querySelectorAll<HTMLButtonElement>(".tag-filter-chip")).map(
+			(chip) => chip.dataset.tag
+		);
+		expect(chips).toEqual(["git"]);
+	});
+
+	it("filters skills by clicking a tag chip, and shows them again when toggled off", () => {
+		boot(document, window);
+		const chip = document.querySelector<HTMLButtonElement>('.tag-filter-chip[data-tag="git"]')!;
+		const skillA = document.querySelector('.skill[data-skill-id="a"]');
+		const skillB = document.querySelector('.skill[data-skill-id="b"]');
+
+		chip.click();
+		expect(chip.classList.contains("active")).toBe(true);
+		expect(chip.getAttribute("aria-pressed")).toBe("true");
+		expect(skillA?.classList.contains("hidden")).toBe(false);
+		expect(skillB?.classList.contains("hidden")).toBe(true);
+
+		chip.click();
+		expect(chip.classList.contains("active")).toBe(false);
+		expect(chip.getAttribute("aria-pressed")).toBe("false");
+		expect(skillA?.classList.contains("hidden")).toBe(false);
+		expect(skillB?.classList.contains("hidden")).toBe(false);
+	});
+
+	it("combines multiple active tags (AND) with the text search box", () => {
+		const taggedData: Data = {
+			skills: [
+				{
+					id: "a",
+					categoryId: "personal",
+					name: "regression-tracer",
+					invocation: "auto",
+					description: "does a",
+					summary: "does a",
+					tags: ["git", "debugging"]
+				},
+				{
+					id: "b",
+					categoryId: "personal",
+					name: "other-skill",
+					invocation: "auto",
+					description: "does b",
+					summary: "does b",
+					tags: ["git"]
+				}
+			]
+		};
+		document.getElementById("skills-data")!.textContent = JSON.stringify(taggedData);
+		boot(document, window);
+
+		const gitChip = document.querySelector<HTMLButtonElement>('.tag-filter-chip[data-tag="git"]')!;
+		const debuggingChip = document.querySelector<HTMLButtonElement>('.tag-filter-chip[data-tag="debugging"]')!;
+		gitChip.click();
+		debuggingChip.click();
+
+		const skillA = document.querySelector('.skill[data-skill-id="a"]');
+		const skillB = document.querySelector('.skill[data-skill-id="b"]');
+		expect(skillA?.classList.contains("hidden")).toBe(false);
+		expect(skillB?.classList.contains("hidden")).toBe(true);
+
+		const searchBox = document.getElementById("searchBox") as HTMLInputElement;
+		searchBox.value = "other";
+		searchBox.dispatchEvent(new Event("input"));
+		expect(skillA?.classList.contains("hidden")).toBe(true);
+		expect(skillB?.classList.contains("hidden")).toBe(true);
 	});
 
 	it("wires the search, expand/collapse, and theme-toggle icons into the static chrome", () => {

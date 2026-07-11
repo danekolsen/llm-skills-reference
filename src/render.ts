@@ -14,6 +14,15 @@ export function renderTagChips(tags: string[] | undefined): string {
 	return (tags ?? []).map((tag) => `<span class="tag-chip">${escapeHtml(tag)}</span>`).join("");
 }
 
+export function renderTagFilterChips(tags: string[]): string {
+	return tags
+		.map(
+			(tag) =>
+				`<button type="button" class="tag-filter-chip" data-tag="${escapeHtml(tag)}" aria-pressed="false">${escapeHtml(tag)}</button>`
+		)
+		.join("");
+}
+
 function renderChipList(ids: string[], skillsById: Map<string, Skill>): string {
 	return ids
 		.map((id) => {

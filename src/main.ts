@@ -1,6 +1,6 @@
 import type { Category, Config, Data, Skill } from "./types";
 import { deriveUsedBy } from "./derive";
-import { buildSearchText, filterSkills } from "./search";
+import { buildSearchText, collectAllTags, filterSkills } from "./search";
 import {
 	escapeHtml,
 	renderCategoryHeader,
@@ -10,7 +10,8 @@ import {
 	renderHowToUse,
 	renderMetaTable,
 	renderNote,
-	renderTagChips
+	renderTagChips,
+	renderTagFilterChips
 } from "./render";
 import { getPreferredTheme, readStoredTheme, writeStoredTheme, type Theme } from "./theme";
 import { ICON_CHEVRON_RIGHT, ICON_CHEVRONS_DOWN, ICON_CHEVRONS_UP, ICON_MOON, ICON_SEARCH, ICON_SUN } from "./icons";
@@ -78,6 +79,12 @@ export function renderSkillsIntoContainer(
 		.join("");
 }
 
+export function renderTagFilter(doc: Document, skills: Skill[]): void {
+	const container = doc.getElementById("tagFilter");
+	if (!container) return;
+	container.innerHTML = renderTagFilterChips(collectAllTags(skills));
+}
+
 export function wireInteractions(doc: Document, skills: Skill[]): void {
 	doc.querySelectorAll<HTMLElement>(".skill-row").forEach((row) => {
 		row.addEventListener("click", () => {
@@ -105,17 +112,38 @@ export function wireInteractions(doc: Document, skills: Skill[]): void {
 	});
 
 	const searchBox = doc.getElementById("searchBox") as HTMLInputElement | null;
-	searchBox?.addEventListener("input", () => {
-		const matches = new Set(filterSkills(skills, searchBox.value).map((skill) => skill.id));
+	const activeTags = new Set<string>();
+
+	const applyFilters = (): void => {
+		const matches = new Set(
+			filterSkills(skills, searchBox?.value ?? "", Array.from(activeTags)).map((skill) => skill.id)
+		);
 		doc.querySelectorAll<HTMLElement>(".skill").forEach((el) => {
 			const skillId = el.dataset.skillId ?? "";
-			el.classList.toggle("hidden", searchBox.value.trim().length > 0 && !matches.has(skillId));
+			el.classList.toggle("hidden", !matches.has(skillId));
 		});
 		doc.querySelectorAll<HTMLElement>(".category").forEach((categoryEl) => {
 			const anyVisible = Array.from(categoryEl.querySelectorAll(".skill")).some(
 				(el) => !el.classList.contains("hidden")
 			);
 			categoryEl.classList.toggle("hidden", !anyVisible);
+		});
+	};
+
+	searchBox?.addEventListener("input", applyFilters);
+
+	doc.querySelectorAll<HTMLButtonElement>(".tag-filter-chip").forEach((chip) => {
+		chip.addEventListener("click", () => {
+			const tag = chip.dataset.tag ?? "";
+			const isNowActive = !activeTags.has(tag);
+			if (isNowActive) {
+				activeTags.add(tag);
+			} else {
+				activeTags.delete(tag);
+			}
+			chip.classList.toggle("active", isNowActive);
+			chip.setAttribute("aria-pressed", String(isNowActive));
+			applyFilters();
 		});
 	});
 }
@@ -163,6 +191,7 @@ export function boot(doc: Document, win: Window): void {
 	const app = doc.getElementById("app");
 	if (!app) throw new Error("Missing #app container");
 	renderSkillsIntoContainer(app, config.categories, data.skills, usedBy, skillsById);
+	renderTagFilter(doc, data.skills);
 	wireInteractions(doc, data.skills);
 	wireTheme(doc, win);
 	wireStaticIcons(doc);

@@ -6,8 +6,19 @@ export function buildSearchText(skill: Skill): string {
 		.toLowerCase();
 }
 
-export function filterSkills(skills: Skill[], query: string): Skill[] {
+export function filterSkills(skills: Skill[], query: string, activeTags: string[] = []): Skill[] {
 	const normalized = query.trim().toLowerCase();
-	if (!normalized) return skills;
-	return skills.filter((skill) => buildSearchText(skill).includes(normalized));
+	return skills.filter((skill) => {
+		const matchesQuery = !normalized || buildSearchText(skill).includes(normalized);
+		const matchesTags = activeTags.every((tag) => (skill.tags ?? []).includes(tag));
+		return matchesQuery && matchesTags;
+	});
+}
+
+export function collectAllTags(skills: Skill[]): string[] {
+	const tags = new Set<string>();
+	for (const skill of skills) {
+		for (const tag of skill.tags ?? []) tags.add(tag);
+	}
+	return Array.from(tags).sort((a, b) => a.localeCompare(b));
 }

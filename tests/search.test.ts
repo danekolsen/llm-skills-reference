@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filterSkills } from "../src/search";
+import { collectAllTags, filterSkills } from "../src/search";
 import type { Skill } from "../src/types";
 
 function makeSkill(overrides: Partial<Skill>): Skill {
@@ -34,5 +34,44 @@ describe("filterSkills", () => {
 	it("excludes non-matching skills", () => {
 		const skills = [makeSkill({ name: "skill-a" })];
 		expect(filterSkills(skills, "nonexistent")).toHaveLength(0);
+	});
+
+	it("filters to skills that have every active tag (AND semantics)", () => {
+		const skills = [
+			makeSkill({ id: "a", tags: ["git", "debugging"] }),
+			makeSkill({ id: "b", tags: ["git"] }),
+			makeSkill({ id: "c", tags: ["debugging"] })
+		];
+		expect(filterSkills(skills, "", ["git", "debugging"]).map((s) => s.id)).toEqual(["a"]);
+		expect(filterSkills(skills, "", ["git"]).map((s) => s.id)).toEqual(["a", "b"]);
+	});
+
+	it("combines the text query and active tags with AND", () => {
+		const skills = [
+			makeSkill({ id: "a", name: "regression-tracer", tags: ["git"] }),
+			makeSkill({ id: "b", name: "other-skill", tags: ["git"] })
+		];
+		expect(filterSkills(skills, "regression", ["git"]).map((s) => s.id)).toEqual(["a"]);
+	});
+
+	it("treats an empty active-tags list as no tag filter", () => {
+		const skills = [makeSkill({ id: "a", tags: ["git"] })];
+		expect(filterSkills(skills, "", [])).toHaveLength(1);
+	});
+});
+
+describe("collectAllTags", () => {
+	it("returns the sorted set of unique tags across all skills", () => {
+		const skills = [
+			makeSkill({ id: "a", tags: ["git", "debugging"] }),
+			makeSkill({ id: "b", tags: ["git", "review"] }),
+			makeSkill({ id: "c", tags: [] })
+		];
+		expect(collectAllTags(skills)).toEqual(["debugging", "git", "review"]);
+	});
+
+	it("returns an empty array when no skills have tags", () => {
+		const skills = [makeSkill({ id: "a" })];
+		expect(collectAllTags(skills)).toEqual([]);
 	});
 });

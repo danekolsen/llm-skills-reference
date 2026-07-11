@@ -248,6 +248,39 @@ header h1 {
 	white-space: nowrap;
 }
 
+.tag-filter {
+	flex: 1 0 100%;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.tag-filter:empty {
+	display: none;
+}
+
+.tag-filter-chip {
+	font-size: 11px;
+	font-family: inherit;
+	color: var(--text-muted);
+	background: var(--mono-bg);
+	border: 1px solid var(--border);
+	padding: 3px 10px;
+	border-radius: 10px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.tag-filter-chip:hover {
+	background: var(--border);
+}
+
+.tag-filter-chip.active {
+	background: var(--text);
+	color: var(--panel);
+	border-color: var(--text);
+}
+
 main {
 	max-width: 1210px;
 	margin: 0 auto;
