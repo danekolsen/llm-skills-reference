@@ -83,4 +83,23 @@ describe("runBuild", () => {
 		expect(appScriptMatch).not.toBeNull();
 		expect(appScriptMatch![1]!.length).toBeGreaterThan(0);
 	});
+
+	it("throws an error identifying config.json when it is missing", async () => {
+		const configPath = join(tempDir, "config.json");
+		const dataPath = join(tempDir, "data.json");
+		const outPath = join(tempDir, "dist", "index.html");
+		writeFileSync(dataPath, JSON.stringify(validData));
+
+		await expect(runBuild(configPath, dataPath, outPath)).rejects.toThrow(/config\.json/);
+	});
+
+	it("throws an error identifying data.json and JSON parsing when it contains malformed JSON", async () => {
+		const configPath = join(tempDir, "config.json");
+		const dataPath = join(tempDir, "data.json");
+		const outPath = join(tempDir, "dist", "index.html");
+		writeFileSync(configPath, JSON.stringify(validConfig));
+		writeFileSync(dataPath, "{ not valid json");
+
+		await expect(runBuild(configPath, dataPath, outPath)).rejects.toThrow(/data\.json.*JSON/s);
+	});
 });

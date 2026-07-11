@@ -11,9 +11,23 @@ function escapeForInlineScript(raw: string): string {
 	return raw.replace(/<\/script/gi, "<\\/script");
 }
 
+function readJsonFile<T>(path: string): T {
+	let raw: string;
+	try {
+		raw = readFileSync(path, "utf-8");
+	} catch (error) {
+		throw new Error(`Failed to read ${path}: ${error instanceof Error ? error.message : String(error)}`);
+	}
+	try {
+		return JSON.parse(raw) as T;
+	} catch (error) {
+		throw new Error(`Failed to parse ${path} as JSON: ${error instanceof Error ? error.message : String(error)}`);
+	}
+}
+
 export async function runBuild(configPath: string, dataPath: string, outPath: string): Promise<void> {
-	const config = JSON.parse(readFileSync(configPath, "utf-8")) as Config;
-	const data = JSON.parse(readFileSync(dataPath, "utf-8")) as Data;
+	const config = readJsonFile<Config>(configPath);
+	const data = readJsonFile<Data>(dataPath);
 
 	const errors = validateData(config, data);
 	if (errors.length > 0) {
