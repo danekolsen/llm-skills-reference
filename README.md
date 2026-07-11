@@ -1,3 +1,6 @@
+<img width="1314" height="979" alt="Screenshot 2026-07-10 at 9 39 21 PM" src="https://github.com/user-attachments/assets/035e307f-bd37-4480-a5b1-362d69bba87b" />
+
+
 # Skills Reference
 
 A portable, config-driven catalog viewer for Agent Skills (or any similarly-shaped catalog of tools). Renders a static, dependency-free `dist/index.html` you can open directly in a browser, serve locally, or deploy anywhere — no server required to use it.
