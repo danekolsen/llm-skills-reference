@@ -6,6 +6,7 @@ first for the exact field-by-field schema — it isn't repeated here).
 
 ## Table of contents
 - [Where the scan map lives](#where-the-scan-map-lives)
+- [One category per repo](#one-category-per-repo)
 - [Canonical name & frontmatter](#canonical-name--frontmatter)
 - [Populating the deep fields for a new entry](#populating-the-deep-fields-for-a-new-entry)
 - [Shared / symlinked skills](#shared--symlinked-skills)
@@ -14,15 +15,61 @@ first for the exact field-by-field schema — it isn't repeated here).
 ## Where the scan map lives
 
 There is no hardcoded folder→category table to keep in sync here.
-`config.json`'s `categories[].scanPaths` field **is** the scan map — each
-category names its own glob-like locations, and step 2 of the workflow just
-walks whatever is declared there. Point `config.json` at your real skill
-folders once (e.g. `~/.cursor/skills/**/SKILL.md`,
-`<repo>/.cursor/skills/**/SKILL.md`, `<repo>/.claude/skills/**/SKILL.md`);
-this skill picks up changes to that list automatically on the next run — no
-skill-file edit required.
+`config.json`'s `categories[].scanPaths` field is the scan map *as far as
+it's been told* — each category names its own glob-like locations, but that
+list is only ever as complete as the last run that edited it. Don't treat it
+as exhaustive. Every run does two things, not one:
+
+1. **Search for locations it doesn't cover yet.** IDE/product built-in skill
+   directories (e.g. `~/.cursor/skills-cursor/**/SKILL.md`), plugin/
+   marketplace caches (e.g.
+   `~/.cursor/plugins/cache/**/skills/**/SKILL.md`), and every repo in the
+   user's workspace — open IDE folders and common dev roots — not just the
+   repo this catalog lives in. Anything real found this way gets proposed as
+   a new category or scanPath addition in the review (see the grouped review
+   template below); it never gets added to `config.json` silently.
+2. **Walk every `scanPath` that's already declared, in full.** A scan that
+   only covers the categories/locations you happen to remember — typically
+   the user's personal `~/.cursor/skills` — is a partial scan. It produces a
+   catalog that *looks* complete (data.json has fresh entries!) while
+   silently missing whole categories (`cursor-builtin`, a second repo, a
+   plugin's skills) that were declared but never actually walked. That
+   failure mode is worse than an obviously-stale catalog, because nothing
+   about the output signals it happened.
+
+Once you've found a real location — declared or newly discovered — this
+skill picks up changes to `config.json`'s scan map automatically on the next
+run; no skill-file edit is required for that part.
 
 A folder counts as a skill only if it holds a `SKILL.md`.
+
+## One category per repo
+
+Every git repo gets its own category, named for that repo — never a shared
+"project"/"repo" catch-all that spans more than one. This is the specific
+mistake to watch for: a first repo (say, the one this catalog lives in) gets
+a generic-sounding category like "project", and later a *second* repo's
+skills get discovered and folded into that same category because the name
+sounds general enough to fit. It isn't — "project" is really "this one
+particular repo" wearing a generic label, and a second repo needs a category
+of its own, not a spot inside the first repo's.
+
+**Naming convention:** derive both `id` and `name` from the repo's own folder
+name (the basename of its root directory, or its `git remote`'s repo name if
+that's clearer) — lowercase-kebab for `id` (`on-prem`, `frontend`), Title
+Case for `name` (`On-Prem`, `Frontend`). Don't invent a different name than
+the repo's own.
+
+**Scope:** a repo's category's `scanPaths` covers every skill directory
+*inside that one repo* — `.cursor/skills/**/SKILL.md`, `.claude/skills/**/SKILL.md`,
+or both, if the repo has both — and nothing from any other repo. Two repos
+discovered in the same run are two category proposals, never one.
+
+**Existing violations are drift too.** If you find a category whose
+`scanPaths` already span more than one distinct repo (see the (e) CATEGORY
+SCOPE bucket in the main workflow), that's not a shape to preserve or work
+around — propose splitting it into one category per repo and reassigning the
+affected skills' `categoryId`s, the same as any other drift.
 
 ## Canonical name & frontmatter
 
@@ -89,6 +136,12 @@ otherwise.
 ```
 ## Skills catalog reconciliation — <N> discrepancies
 (mode: standalone | registration; auto-added: <skill or none>)
+(scanned beyond config.json: <list of locations actively searched for, e.g.
+IDE built-ins, plugin caches, other workspace repos — or "none found")
+
+### Missing scan locations (found on disk, not declared in config.json)
+- <location> — <what's there, how many skills> → proposed: new category
+  {id, name, color, description, scanPaths} | add to <category>'s scanPaths
 
 ### Add (on disk, missing from catalog)
 - <category> / <name> — <one-line why> → proposed entry: {full object,
@@ -103,6 +156,12 @@ otherwise.
 
 ### Description drift
 - <category> / <name> — catalog vs SKILL.md diff → proposed description
+
+### Category scope drift (one category spanning more than one repo)
+- <category> — currently covers: <repo A>, <repo B> → proposed: split into
+  <repo-A-category> {id, name, color, scanPaths} + <repo-B-category>
+  {id, name, color, scanPaths}, reassigning <N> affected skills'
+  categoryId accordingly
 
 Nothing is applied except the auto-added skill until you approve per item.
 ```
