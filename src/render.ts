@@ -1,7 +1,12 @@
 import type { Category, Skill } from "./types";
 
 export function escapeHtml(value: string): string {
-	return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	return value
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#39;");
 }
 
 export function renderTagChips(tags: string[] | undefined): string {
@@ -42,7 +47,7 @@ export function renderCrossReferences(
 export function renderCategoryHeader(category: Category, skillCount: number): string {
 	return `
 		<div class="category-head">
-			<span class="tag" style="background:${category.color}">${escapeHtml(category.name)}</span>
+			<span class="tag" style="background:${escapeHtml(category.color)}">${escapeHtml(category.name)}</span>
 			<h2>${escapeHtml(category.name)}</h2>
 			<span class="count">${skillCount} skill${skillCount === 1 ? "" : "s"}</span>
 		</div>

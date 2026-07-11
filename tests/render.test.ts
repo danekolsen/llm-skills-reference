@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { renderCategoryHeader, renderCrossReferences, renderTagChips } from "../src/render";
+import { escapeHtml, renderCategoryHeader, renderCrossReferences, renderTagChips } from "../src/render";
 import type { Category, Skill } from "../src/types";
 
 function makeSkill(overrides: Partial<Skill>): Skill {
@@ -13,6 +13,16 @@ function makeSkill(overrides: Partial<Skill>): Skill {
 		...overrides
 	};
 }
+
+describe("escapeHtml", () => {
+	it("escapes double and single quote characters", () => {
+		const html = escapeHtml(`foo" onmouseover="alert(1)' x='y`);
+		expect(html).not.toContain('"');
+		expect(html).not.toContain("'");
+		expect(html).toContain("&quot;");
+		expect(html).toContain("&#39;");
+	});
+});
 
 describe("renderTagChips", () => {
 	it("renders one chip per tag", () => {
@@ -57,5 +67,18 @@ describe("renderCategoryHeader", () => {
 		const html = renderCategoryHeader(category, 3);
 		expect(html).toContain("Personal");
 		expect(html).toContain("3 skills");
+	});
+
+	it("escapes a malicious color value instead of breaking out of the style attribute", () => {
+		const category: Category = {
+			id: "personal",
+			name: "Personal",
+			color: `red" onmouseover="alert(1)`,
+			description: "desc",
+			scanPaths: []
+		};
+		const html = renderCategoryHeader(category, 1);
+		expect(html).toContain("&quot;");
+		expect(html).not.toContain('background:red" onmouseover="alert(1)');
 	});
 });
