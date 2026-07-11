@@ -90,7 +90,10 @@ describe("runBuild", () => {
 		const outPath = join(tempDir, "dist", "index.html");
 		writeFileSync(dataPath, JSON.stringify(validData));
 
-		await expect(runBuild(configPath, dataPath, outPath)).rejects.toThrow(/config\.json/);
+		// Asserts on the "Failed to read" prefix added by readJsonFile's read-path catch block,
+		// not just the bare path: Node's native ENOENT message already contains the path, so a
+		// path-only assertion would pass even without the readJsonFile wrapping in place.
+		await expect(runBuild(configPath, dataPath, outPath)).rejects.toThrow(/Failed to read .*config\.json/);
 	});
 
 	it("throws an error identifying data.json and JSON parsing when it contains malformed JSON", async () => {
