@@ -8,6 +8,7 @@
 
 	--accent-green-bg: #e8f8f0;
 	--accent-green-text: #0f7a4d;
+	--accent-green-border: #b7e6cc;
 	--accent-amber-bg: #fff6e5;
 	--accent-amber-text: #8a5a00;
 	--accent-amber-border: #f5c26b;
@@ -19,8 +20,10 @@
 	--accent-forest-border: #cfe8cf;
 	--accent-gray-bg: #eef0f2;
 	--accent-gray-text: #495157;
+	--accent-gray-border: #d4d8db;
 	--accent-blue-bg: #eef2f7;
 	--accent-blue-text: #435b73;
+	--accent-blue-border: #c7d5e2;
 }
 
 :root[data-theme="dark"] {
@@ -33,6 +36,7 @@
 
 	--accent-green-bg: #163526;
 	--accent-green-text: #6cd9a0;
+	--accent-green-border: #2f6b4c;
 	--accent-amber-bg: #3a2e12;
 	--accent-amber-text: #f0c674;
 	--accent-amber-border: #6b4f1f;
@@ -44,8 +48,10 @@
 	--accent-forest-border: #2f4a35;
 	--accent-gray-bg: #2a2e33;
 	--accent-gray-text: #b7bec6;
+	--accent-gray-border: #4a5157;
 	--accent-blue-bg: #22303f;
 	--accent-blue-text: #9dc0e0;
+	--accent-blue-border: #3c5670;
 }
 
 * {
@@ -313,6 +319,7 @@ main {
 	letter-spacing: 0.03em;
 	color: #fff;
 	padding: 4px 9px;
+	border: 1px solid rgba(0, 0, 0, 0.18);
 	border-radius: 4px;
 	text-transform: uppercase;
 }
@@ -354,6 +361,7 @@ main {
 .badge.auto {
 	background: var(--accent-green-bg);
 	color: var(--accent-green-text);
+	border: 1px solid var(--accent-green-border);
 }
 
 .badge.manual {
@@ -383,11 +391,13 @@ main {
 .badge.shared {
 	background: var(--accent-gray-bg);
 	color: var(--accent-gray-text);
+	border: 1px solid var(--accent-gray-border);
 }
 
 .badge.updated {
 	background: var(--accent-blue-bg);
 	color: var(--accent-blue-text);
+	border: 1px solid var(--accent-blue-border);
 }
 
 .chevron {
