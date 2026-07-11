@@ -44,4 +44,21 @@ describe("validateData", () => {
 			{ message: 'Skill "skill-a" is missing required field "summary"' }
 		]);
 	});
+
+	it("accumulates multiple errors for a single skill with multiple problems", () => {
+		const data: Data = { skills: [makeSkill({ summary: "", dependsOn: ["ghost"] })] };
+		const errors = validateData(baseConfig, data);
+		expect(errors.length).toBeGreaterThan(1);
+		expect(errors).toEqual(
+			expect.arrayContaining([
+				{ message: 'Skill "skill-a" is missing required field "summary"' },
+				{ message: 'Skill "skill-a" depends on unknown skill "ghost"' }
+			])
+		);
+	});
+
+	it("returns no errors for an empty skills list", () => {
+		const data: Data = { skills: [] };
+		expect(validateData(baseConfig, data)).toEqual([]);
+	});
 });
