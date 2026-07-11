@@ -31,10 +31,19 @@ const data: Data = {
 
 function setupDom(): void {
 	document.body.innerHTML = `
-		<button id="themeToggle"></button>
-		<input type="search" id="searchBox" />
-		<button id="expandAll"></button>
-		<button id="collapseAll"></button>
+		<button id="themeToggle" class="theme-toggle">
+			<span class="theme-toggle-track">
+				<span class="theme-toggle-icon theme-toggle-icon-sun"></span>
+				<span class="theme-toggle-icon theme-toggle-icon-moon"></span>
+				<span class="theme-toggle-thumb"></span>
+			</span>
+		</button>
+		<div class="search-wrap">
+			<span class="search-icon"></span>
+			<input type="search" id="searchBox" />
+		</div>
+		<button id="expandAll"><span class="btn-icon"></span>Expand all</button>
+		<button id="collapseAll"><span class="btn-icon"></span>Collapse all</button>
 		<div class="summary-counts" id="summaryCounts"></div>
 		<main id="app"></main>
 		<script type="application/json" id="config-data">${JSON.stringify(config)}</script>
@@ -48,9 +57,10 @@ describe("boot", () => {
 		setupDom();
 	});
 
-	it("renders one .skill element per skill", () => {
+	it("renders one .skill element per skill, each with a chevron icon", () => {
 		boot(document, window);
 		expect(document.querySelectorAll(".skill")).toHaveLength(2);
+		expect(document.querySelectorAll(".chevron svg")).toHaveLength(2);
 	});
 
 	it("renders the cross-reference relationship between skills", () => {
@@ -78,6 +88,15 @@ describe("boot", () => {
 		const initialTheme = document.documentElement.dataset.theme;
 		toggle.click();
 		expect(document.documentElement.dataset.theme).not.toBe(initialTheme);
+	});
+
+	it("wires the search, expand/collapse, and theme-toggle icons into the static chrome", () => {
+		boot(document, window);
+		expect(document.querySelector(".search-icon svg")).not.toBeNull();
+		expect(document.querySelector("#expandAll .btn-icon svg")).not.toBeNull();
+		expect(document.querySelector("#collapseAll .btn-icon svg")).not.toBeNull();
+		expect(document.querySelector(".theme-toggle-icon-sun svg")).not.toBeNull();
+		expect(document.querySelector(".theme-toggle-icon-moon svg")).not.toBeNull();
 	});
 
 	it("renders the full description, how-to-use steps, meta table, note, and status/shared badges when present", () => {

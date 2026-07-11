@@ -13,6 +13,7 @@ import {
 	renderTagChips
 } from "./render";
 import { getPreferredTheme, readStoredTheme, writeStoredTheme, type Theme } from "./theme";
+import { ICON_CHEVRON_RIGHT, ICON_CHEVRONS_DOWN, ICON_CHEVRONS_UP, ICON_MOON, ICON_SEARCH, ICON_SUN } from "./icons";
 
 function readEmbeddedJson<T>(doc: Document, elementId: string): T {
 	const element = doc.getElementById(elementId);
@@ -43,7 +44,7 @@ function renderSkillCard(
 				<span class="topic-tags">${renderTagChips(skill.tags)}${modeBadge}</span>
 				${invocationBadge}
 				${renderExtraBadges(skill)}
-				<span class="chevron">&#9656;</span>
+				<span class="chevron">${ICON_CHEVRON_RIGHT}</span>
 			</div>
 			<div class="skill-body">
 				<p class="skill-summary-line"><strong>${escapeHtml(skill.summary)}</strong></p>
@@ -119,6 +120,23 @@ export function wireInteractions(doc: Document, skills: Skill[]): void {
 	});
 }
 
+export function wireStaticIcons(doc: Document): void {
+	const searchIcon = doc.querySelector(".search-icon");
+	if (searchIcon) searchIcon.innerHTML = ICON_SEARCH;
+
+	const expandIcon = doc.querySelector("#expandAll .btn-icon");
+	if (expandIcon) expandIcon.innerHTML = ICON_CHEVRONS_DOWN;
+
+	const collapseIcon = doc.querySelector("#collapseAll .btn-icon");
+	if (collapseIcon) collapseIcon.innerHTML = ICON_CHEVRONS_UP;
+
+	const sunIcon = doc.querySelector(".theme-toggle-icon-sun");
+	if (sunIcon) sunIcon.innerHTML = ICON_SUN;
+
+	const moonIcon = doc.querySelector(".theme-toggle-icon-moon");
+	if (moonIcon) moonIcon.innerHTML = ICON_MOON;
+}
+
 function applyTheme(doc: Document, theme: Theme): void {
 	doc.documentElement.dataset.theme = theme;
 }
@@ -147,6 +165,7 @@ export function boot(doc: Document, win: Window): void {
 	renderSkillsIntoContainer(app, config.categories, data.skills, usedBy, skillsById);
 	wireInteractions(doc, data.skills);
 	wireTheme(doc, win);
+	wireStaticIcons(doc);
 
 	const summaryCounts = doc.getElementById("summaryCounts");
 	if (summaryCounts) {

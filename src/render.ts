@@ -1,3 +1,4 @@
+import { ICON_FILE_TEXT } from "./icons";
 import type { Category, Skill } from "./types";
 
 export function escapeHtml(value: string): string {
@@ -118,7 +119,7 @@ export function renderHowToUse(skill: Skill): string {
 
 export function renderMetaTable(skill: Skill): string {
 	const locationRow = skill.location
-		? `<tr><td class="k">Location</td><td class="v"><code>${escapeHtml(skill.location)}</code></td></tr>`
+		? `<tr><td class="k">Location</td><td class="v">${ICON_FILE_TEXT}<code>${escapeHtml(skill.location)}</code></td></tr>`
 		: "";
 	const invocationText =
 		skill.invocation === "manual"

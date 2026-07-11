@@ -10,14 +10,23 @@
 <header>
 	<h1>Skills Reference</h1>
 	<div class="header-actions">
-		<button id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle light/dark theme">&#127765;</button>
+		<button id="themeToggle" class="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle light/dark theme">
+			<span class="theme-toggle-track">
+				<span class="theme-toggle-icon theme-toggle-icon-sun"></span>
+				<span class="theme-toggle-icon theme-toggle-icon-moon"></span>
+				<span class="theme-toggle-thumb"></span>
+			</span>
+		</button>
 	</div>
 </header>
 
 <div class="toolbar">
-	<input type="search" id="searchBox" aria-label="Filter skills" placeholder="Filter skills by name, description, or tag…" />
-	<button id="expandAll">Expand all</button>
-	<button id="collapseAll">Collapse all</button>
+	<div class="search-wrap">
+		<span class="search-icon"></span>
+		<input type="search" id="searchBox" aria-label="Filter skills" placeholder="Filter skills by name, description, or tag…" />
+	</div>
+	<button id="expandAll"><span class="btn-icon"></span>Expand all</button>
+	<button id="collapseAll"><span class="btn-icon"></span>Collapse all</button>
 	<div class="summary-counts" id="summaryCounts"></div>
 </div>
 
