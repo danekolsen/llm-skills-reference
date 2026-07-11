@@ -1,0 +1,18 @@
+{
+	"categories": [
+		{
+			"id": "personal",
+			"name": "Personal",
+			"color": "#61affe",
+			"description": "Skills available in every project, invoked on demand for personal productivity workflows.",
+			"scanPaths": ["~/.cursor/skills/**/SKILL.md"]
+		},
+		{
+			"id": "project",
+			"name": "Project",
+			"color": "#49cc90",
+			"description": "Skills committed to a specific project's repo, shared with anyone working in it.",
+			"scanPaths": ["./.cursor/skills/**/SKILL.md"]
+		}
+	]
+}

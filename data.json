@@ -1,0 +1,38 @@
+{
+	"skills": [
+		{
+			"id": "example-scanner",
+			"categoryId": "personal",
+			"name": "example-scanner",
+			"invocation": "auto",
+			"description": "Example skill: scans a folder and summarizes what it finds. Replace this with your own skills — see README.md.",
+			"summary": "Scans a folder and summarizes what it finds.",
+			"tags": ["example", "filesystem"],
+			"interactive": false,
+			"updated": "2026-07-11"
+		},
+		{
+			"id": "example-reporter",
+			"categoryId": "personal",
+			"name": "example-reporter",
+			"invocation": "manual",
+			"description": "Example skill: formats example-scanner's output into a report. Depends on example-scanner having run first.",
+			"summary": "Formats scan output into a shareable report.",
+			"tags": ["example", "reporting"],
+			"interactive": true,
+			"dependsOn": ["example-scanner"],
+			"updated": "2026-07-11"
+		},
+		{
+			"id": "example-project-linter",
+			"categoryId": "project",
+			"name": "example-project-linter",
+			"invocation": "auto",
+			"description": "Example skill: a project-specific linting workflow, showing what a Project-category entry looks like.",
+			"summary": "Runs a project-specific lint workflow.",
+			"tags": ["example", "linting"],
+			"interactive": false,
+			"updated": "2026-07-11"
+		}
+	]
+}
