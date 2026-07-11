@@ -1,4 +1,4 @@
-<img width="1304" height="988" alt="Screenshot 2026-07-10 at 10 26 10 PM" src="https://github.com/user-attachments/assets/b330f79d-6b82-49a7-a789-9bfb3c8122e2" />
+<img width="1291" height="983" alt="Screenshot 2026-07-10 at 11 04 13 PM" src="https://github.com/user-attachments/assets/d20038b3-ffa2-4ce1-8239-d88bf036534b" />
 
 
 # Skills Reference
