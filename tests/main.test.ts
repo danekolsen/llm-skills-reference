@@ -80,6 +80,45 @@ describe("boot", () => {
 		expect(document.documentElement.dataset.theme).not.toBe(initialTheme);
 	});
 
+	it("renders the full description, how-to-use steps, meta table, note, and status/shared badges when present", () => {
+		const richData: Data = {
+			skills: [
+				{
+					id: "rich",
+					categoryId: "personal",
+					name: "rich-skill",
+					invocation: "manual",
+					description: "does rich things",
+					summary: "does rich things",
+					location: "~/.cursor/skills/rich-skill/SKILL.md",
+					note: "Ships references/foo.md.",
+					status: "Draft PR #42",
+					descriptionIntro: "Here's what this involves:",
+					descriptionBullets: ["Does the first thing", "Waits for your approval before applying edits"],
+					howToUse: ["Triggered by asking for it.", "Pauses and waits for your approval before continuing."],
+					tags: ["example"],
+					shared: true,
+					updated: "2026-07-10"
+				}
+			]
+		};
+		document.getElementById("skills-data")!.textContent = JSON.stringify(richData);
+
+		boot(document, window);
+
+		const card = document.querySelector('.skill[data-skill-id="rich"]');
+		expect(card?.textContent).toContain("Here's what this involves:");
+		expect(card?.textContent).toContain("Does the first thing");
+		expect(card?.textContent).toContain("Needs your input");
+		expect(card?.textContent).toContain("Triggered by asking for it.");
+		expect(card?.textContent).toContain("~/.cursor/skills/rich-skill/SKILL.md");
+		expect(card?.textContent).toContain("On-demand only");
+		expect(card?.textContent).toContain("2026-07-10");
+		expect(card?.textContent).toContain("Ships references/foo.md.");
+		expect(card?.textContent).toContain("Draft PR #42");
+		expect(card?.textContent).toContain("Shared");
+	});
+
 	it("navigates to a cross-referenced skill via chip click even when the id contains a quote character", () => {
 		Element.prototype.scrollIntoView ??= () => {};
 

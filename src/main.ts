@@ -1,7 +1,17 @@
 import type { Category, Config, Data, Skill } from "./types";
 import { deriveUsedBy } from "./derive";
-import { filterSkills } from "./search";
-import { escapeHtml, renderCategoryHeader, renderCrossReferences, renderTagChips } from "./render";
+import { buildSearchText, filterSkills } from "./search";
+import {
+	escapeHtml,
+	renderCategoryHeader,
+	renderCrossReferences,
+	renderDescriptionBody,
+	renderExtraBadges,
+	renderHowToUse,
+	renderMetaTable,
+	renderNote,
+	renderTagChips
+} from "./render";
 import { getPreferredTheme, readStoredTheme, writeStoredTheme, type Theme } from "./theme";
 
 function readEmbeddedJson<T>(doc: Document, elementId: string): T {
@@ -24,22 +34,24 @@ function renderSkillCard(
 	const invocationBadge = `<span class="badge ${skill.invocation === "manual" ? "manual" : "auto"}">${
 		skill.invocation === "manual" ? "Manual invocation" : "Auto-discoverable"
 	}</span>`;
-	const searchText = [skill.name, skill.description, skill.summary, (skill.tags ?? []).join(" ")]
-		.join(" ")
-		.toLowerCase();
 
 	return `
-		<div class="skill" data-search-text="${escapeHtml(searchText)}" data-skill-id="${escapeHtml(skill.id)}">
+		<div class="skill" data-search-text="${escapeHtml(buildSearchText(skill))}" data-skill-id="${escapeHtml(skill.id)}">
 			<div class="skill-row">
 				<span class="tag" style="background:${escapeHtml(category.color)}">${escapeHtml(category.name)}</span>
 				<span class="skill-name">${escapeHtml(skill.name)}</span>
 				<span class="topic-tags">${renderTagChips(skill.tags)}${modeBadge}</span>
 				${invocationBadge}
+				${renderExtraBadges(skill)}
 				<span class="chevron">&#9656;</span>
 			</div>
 			<div class="skill-body">
 				<p class="skill-summary-line"><strong>${escapeHtml(skill.summary)}</strong></p>
 				${renderCrossReferences(skill, usedBy, skillsById)}
+				${renderDescriptionBody(skill)}
+				${renderHowToUse(skill)}
+				${renderMetaTable(skill)}
+				${renderNote(skill)}
 			</div>
 		</div>
 	`;

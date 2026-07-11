@@ -237,6 +237,22 @@ main {
 	border: 1px solid #cfe8cf;
 }
 
+.badge.status {
+	background: #fff6e5;
+	color: #8a5a00;
+	border: 1px solid #f5c26b;
+}
+
+.badge.shared {
+	background: #eef0f2;
+	color: #495157;
+}
+
+.badge.updated {
+	background: #eef2f7;
+	color: #435b73;
+}
+
 .chevron {
 	flex: 0 0 auto;
 	font-size: 12px;
@@ -262,6 +278,108 @@ main {
 	font-size: 14.5px;
 	line-height: 1.5;
 	margin: 14px 0 10px 0;
+}
+
+.full-desc {
+	font-size: 13.5px;
+	line-height: 1.55;
+	color: var(--text);
+}
+
+.full-desc p {
+	margin: 0 0 8px 0;
+}
+
+.full-desc ul {
+	margin: 0 0 8px 0;
+	padding-left: 20px;
+}
+
+.full-desc li {
+	margin-bottom: 4px;
+}
+
+.how-to-use {
+	margin-top: 16px;
+}
+
+.how-to-use h4 {
+	margin: 0 0 8px 0;
+	font-size: 12.5px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--text-muted);
+}
+
+.how-to-use ol {
+	margin: 0;
+	padding-left: 20px;
+	font-size: 13.5px;
+	line-height: 1.6;
+	color: var(--text);
+}
+
+.how-to-use ol li {
+	margin-bottom: 6px;
+}
+
+.how-to-use p.autonomous-note {
+	margin: 0;
+	font-size: 13.5px;
+	line-height: 1.55;
+	color: var(--text);
+}
+
+.step-pause-tag {
+	display: inline-block;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: #6b3fd4;
+	background: #f2ecff;
+	border: 1px solid #d9c9ff;
+	border-radius: 4px;
+	padding: 1px 6px;
+	margin-right: 6px;
+	vertical-align: middle;
+}
+
+.meta-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 12.5px;
+	margin-top: 10px;
+}
+
+.meta-table td {
+	padding: 6px 0;
+	vertical-align: top;
+	border-top: 1px solid var(--border);
+}
+
+.meta-table td.k {
+	width: 130px;
+	color: var(--text-muted);
+	font-weight: 600;
+}
+
+.meta-table td.v code {
+	background: var(--mono-bg);
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-size: 12px;
+	word-break: break-all;
+}
+
+.pending-note {
+	margin-top: 12px;
+	padding: 10px 12px;
+	background: #fff6e5;
+	border: 1px solid #f5c26b;
+	border-radius: 6px;
+	font-size: 12.5px;
+	color: #8a5a00;
 }
 
 .cross-refs {
