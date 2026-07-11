@@ -17,7 +17,7 @@ open dist/index.html
 
 1. Clone this repo.
 2. Edit `config.json` to describe your own categories and where your skills live (the `scanPaths` field — see `SCHEMA.md`).
-3. Hand this repo, plus access to your environment, to an agent. Ask it to read `SCHEMA.md`, scan the paths listed in your `config.json`, and write `data.json` to match your actual skills.
+3. Hand this repo, plus access to your environment, to an agent, and ask it to run the `update-skills-doc` skill (`.cursor/skills/update-skills-doc/SKILL.md`, shipped in this repo — see "Keeping the catalog in sync" below). On a fresh `data.json` this treats every skill on disk as an ADD: it reads each `SKILL.md` in full, not just its frontmatter, so entries come in with `location`, `tags`, and — where the skill's own docs support it — `descriptionIntro`/`descriptionBullets`/`howToUse` already filled in, instead of a bare name/description.
 4. Run `npm run build` to produce your own `dist/index.html`.
 
 ## Keeping the catalog in sync

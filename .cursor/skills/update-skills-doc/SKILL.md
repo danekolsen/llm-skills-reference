@@ -9,8 +9,9 @@ description: >-
   grouped review so you approve each change (except auto-adding a freshly
   built skill). Use whenever the user asks to update the skill catalog, sync
   data.json, regenerate/refresh the skills reference, or check whether it's
-  out of date, and as the final registration step of super-skill-builder after
-  a new skill is created — even if the user doesn't name data.json explicitly.
+  out of date, and as the final registration step after another skill-
+  authoring workflow builds a new skill — even if the user doesn't name
+  data.json explicitly.
 ---
 
 # Update Skills Doc
@@ -36,11 +37,6 @@ template. The `config.json`/`data.json` field reference itself lives in this
 project's root [`SCHEMA.md`](../../../SCHEMA.md) — read that for the exact
 schema, don't duplicate it here.
 
-*Ported from the original `~/.cursor/skills/update-skills-doc`, which targets
-a legacy single-file HTML catalog with an embedded `CATEGORIES` array. This
-copy targets the config-driven `config.json`/`data.json` model instead — see
-"Where the scan map lives" in the reference doc for the biggest change.*
-
 ## Branches
 
 This skill runs one of two ways; the only difference is what may be applied
@@ -48,12 +44,12 @@ without asking:
 
 - **Standalone** — triggered by the user ("update the skill catalog"). No
   change is applied without per-item approval.
-- **super-skill-builder registration** — the caller passes a **just-built
-  skill** (its canonical name and folder path). That one skill's *add* is
-  applied automatically; every other drift item still goes to the grouped
-  review. You are in registration mode when a just-built skill was passed in,
-  standalone otherwise. Nothing else differs — same scan, same diff, same
-  review.
+- **Registration** — called by another skill-authoring workflow right after
+  it builds a new skill, which passes in that **just-built skill** (its
+  canonical name and folder path). That one skill's *add* is applied
+  automatically; every other drift item still goes to the grouped review. You
+  are in registration mode when a just-built skill was passed in, standalone
+  otherwise. Nothing else differs — same scan, same diff, same review.
 
 ## Workflow
 
@@ -88,9 +84,19 @@ every category's `scanPaths` and record each folder that contains a
 non-skill files and any transient `*-candidate-*` directories (skill-build
 scratch, not real skills).
 
-**Done when:** every category's `scanPaths` has been walked and every
-`SKILL.md` folder recorded with its canonical name, description, and
-invocation — no location skipped.
+**Read past the frontmatter for anything you'll be adding.** Frontmatter alone
+is enough to detect drift, but a brand-new ADD entry needs more than
+`name`/`description`/`invocation` — it needs `location`, `tags`, and ideally
+`descriptionIntro`/`descriptionBullets`/`howToUse` too, or it lands in the
+catalog barely filled in. For every skill headed for the ADD bucket, read the
+whole `SKILL.md` body and derive those fields as described in "Populating the
+deep fields for a new entry" in the reference doc — don't stop at frontmatter
+just because the reconciliation logic technically doesn't need more.
+
+**Done when:** every category's `scanPaths` has been walked, every `SKILL.md`
+folder recorded with its canonical name, description, and invocation — no
+location skipped — and every likely-ADD skill's full body has been read for
+the deep fields.
 
 ### 3. Parse data.json
 
@@ -127,12 +133,13 @@ bucket or is confirmed accurate, with nothing unclassified.
 
 For CATALOG-ONLY and BADGE/STATUS items that hinge on merge state (a
 `status: "Draft PR #…"` badge, a `note` about an unmerged branch), run a
-lightweight check to inform your recommendation: prefer the **GitKraken/GitLens
-MCP** (PR detail / status), else `gh pr view` when the `gh` CLI is present.
-Turn each into a concrete recommendation ("PR #1919 merged → drop the status
-badge and branch note"). If neither is available, say so and recommend based
-on whether the skill file now exists at its expected location.
-**Recommendations only — the flip itself waits for the review.**
+lightweight check to inform your recommendation: prefer whatever git-hosting
+MCP tool is available (PR/issue detail lookup), else `gh pr view` when the
+`gh` CLI is present. Turn each into a concrete recommendation ("PR #1919
+merged → drop the status badge and branch note"). If neither is available,
+say so and recommend based on whether the skill file now exists at its
+expected location. **Recommendations only — the flip itself waits for the
+review.**
 
 **Done when:** every merge-dependent item carries a recommendation backed by a
 branch/PR check, or is marked "couldn't determine" with the reason.
@@ -161,10 +168,14 @@ fully decided.
 Edit `data.json`'s `skills` array directly: add/update/remove only the
 affected skill objects, matching the existing field order and using tabs like
 the rest of the file — this is real JSON, so parse it, mutate the
-deserialized structure, and write it back, rather than hand-patching text. Add
-a missing category as a new object in `config.json`'s `categories` array
-(with a `color` and `scanPaths`), following the shape of the existing
-categories. Skipped items are left untouched and recorded as deferred.
+deserialized structure, and write it back, rather than hand-patching text. New
+ADD entries should carry the deep fields derived in step 2 (`location`,
+`tags`, and `descriptionIntro`/`descriptionBullets`/`howToUse` where the
+skill's body supports them) — a bare `name`/`description`/`summary` entry is
+a regression, not a shortcut. Add a missing category as a new object in
+`config.json`'s `categories` array (with a `color` and `scanPaths`), following
+the shape of the existing categories. Skipped items are left untouched and
+recorded as deferred.
 
 Then run `npm run build` to confirm: it validates that every skill's
 `categoryId` resolves and every `dependsOn` id resolves (see `SCHEMA.md`), and
@@ -186,5 +197,6 @@ are unchanged, and the summary is given.
   status check says it's safe.
 - **Edit `data.json`/`config.json` directly** — never touch `src/` (rendering,
   validation, or search logic) or `scripts/`.
-- **Recursion guard:** do not invoke `super-skill-builder` from here. This
-  skill is the callee, never the caller.
+- **Recursion guard:** never invoke whatever skill-authoring workflow called
+  you in registration mode. This skill is always the callee, never the
+  caller.
