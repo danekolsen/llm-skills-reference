@@ -20,6 +20,16 @@ open dist/index.html
 3. Hand this repo, plus access to your environment, to an agent. Ask it to read `SCHEMA.md`, scan the paths listed in your `config.json`, and write `data.json` to match your actual skills.
 4. Run `npm run build` to produce your own `dist/index.html`.
 
+## Keeping the catalog in sync
+
+This repo ships its own `update-skills-doc` skill at
+`.cursor/skills/update-skills-doc/SKILL.md` — a real, non-fictional example in
+`data.json` (see the `project` category) as well as a working tool. Point an
+agent at it (or just ask it to "update the skill catalog") and it will scan
+the locations declared in your `config.json`, diff them against `data.json`,
+and walk you through a single grouped review before editing anything. See the
+skill file for details.
+
 ## Development
 
 - `npm run dev` — starts a local server at `http://localhost:4173` that rebuilds `dist/index.html` whenever you edit `src/`, `config.json`, or `data.json`.
