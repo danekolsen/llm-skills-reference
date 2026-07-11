@@ -28,7 +28,14 @@
 	<button id="expandAll"><span class="btn-icon"></span>Expand all</button>
 	<button id="collapseAll"><span class="btn-icon"></span>Collapse all</button>
 	<div class="summary-counts" id="summaryCounts"></div>
-	<div class="tag-filter" id="tagFilter" role="group" aria-label="Filter by tag"></div>
+	<details class="tag-filter-details" id="tagFilterDetails">
+		<summary class="tag-filter-summary">
+			<span class="tag-filter-chevron"></span>
+			Filter by tag
+			<span class="tag-filter-count" id="tagFilterCount" hidden></span>
+		</summary>
+		<div class="tag-filter" id="tagFilter" role="group" aria-label="Filter by tag"></div>
+	</details>
 </div>
 
 <main id="app"></main>

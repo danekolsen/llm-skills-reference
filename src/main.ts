@@ -112,6 +112,7 @@ export function wireInteractions(doc: Document, skills: Skill[]): void {
 	});
 
 	const searchBox = doc.getElementById("searchBox") as HTMLInputElement | null;
+	const tagFilterCount = doc.getElementById("tagFilterCount");
 	const activeTags = new Set<string>();
 
 	const applyFilters = (): void => {
@@ -128,6 +129,10 @@ export function wireInteractions(doc: Document, skills: Skill[]): void {
 			);
 			categoryEl.classList.toggle("hidden", !anyVisible);
 		});
+		if (tagFilterCount) {
+			tagFilterCount.textContent = String(activeTags.size);
+			tagFilterCount.hidden = activeTags.size === 0;
+		}
 	};
 
 	searchBox?.addEventListener("input", applyFilters);
@@ -163,6 +168,9 @@ export function wireStaticIcons(doc: Document): void {
 
 	const moonIcon = doc.querySelector(".theme-toggle-icon-moon");
 	if (moonIcon) moonIcon.innerHTML = ICON_MOON;
+
+	const tagFilterChevron = doc.querySelector(".tag-filter-chevron");
+	if (tagFilterChevron) tagFilterChevron.innerHTML = ICON_CHEVRON_RIGHT;
 }
 
 function applyTheme(doc: Document, theme: Theme): void {

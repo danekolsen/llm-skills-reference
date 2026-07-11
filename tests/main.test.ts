@@ -45,7 +45,14 @@ function setupDom(): void {
 		<button id="expandAll"><span class="btn-icon"></span>Expand all</button>
 		<button id="collapseAll"><span class="btn-icon"></span>Collapse all</button>
 		<div class="summary-counts" id="summaryCounts"></div>
-		<div class="tag-filter" id="tagFilter"></div>
+		<details class="tag-filter-details" id="tagFilterDetails">
+			<summary class="tag-filter-summary">
+				<span class="tag-filter-chevron"></span>
+				Filter by tag
+				<span class="tag-filter-count" id="tagFilterCount" hidden></span>
+			</summary>
+			<div class="tag-filter" id="tagFilter"></div>
+		</details>
 		<main id="app"></main>
 		<script type="application/json" id="config-data">${JSON.stringify(config)}</script>
 		<script type="application/json" id="skills-data">${JSON.stringify(data)}</script>
@@ -118,6 +125,27 @@ describe("boot", () => {
 		expect(skillB?.classList.contains("hidden")).toBe(false);
 	});
 
+	it("keeps the tag filter disclosure closed by default so it doesn't take up space", () => {
+		boot(document, window);
+		const details = document.getElementById("tagFilterDetails") as HTMLDetailsElement;
+		expect(details.open).toBe(false);
+	});
+
+	it("shows an active-tag count badge that tracks how many tag chips are toggled on", () => {
+		boot(document, window);
+		const chip = document.querySelector<HTMLButtonElement>('.tag-filter-chip[data-tag="git"]')!;
+		const count = document.getElementById("tagFilterCount")!;
+		expect(count.hidden).toBe(true);
+
+		chip.click();
+		expect(count.hidden).toBe(false);
+		expect(count.textContent).toBe("1");
+
+		chip.click();
+		expect(count.hidden).toBe(true);
+		expect(count.textContent).toBe("0");
+	});
+
 	it("combines multiple active tags (AND) with the text search box", () => {
 		const taggedData: Data = {
 			skills: [
@@ -168,6 +196,7 @@ describe("boot", () => {
 		expect(document.querySelector("#collapseAll .btn-icon svg")).not.toBeNull();
 		expect(document.querySelector(".theme-toggle-icon-sun svg")).not.toBeNull();
 		expect(document.querySelector(".theme-toggle-icon-moon svg")).not.toBeNull();
+		expect(document.querySelector(".tag-filter-chevron svg")).not.toBeNull();
 	});
 
 	it("renders the full description, how-to-use steps, meta table, note, and status/shared badges when present", () => {
