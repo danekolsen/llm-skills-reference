@@ -76,7 +76,9 @@ export function wireInteractions(doc: Document, skills: Skill[]): void {
 		chip.addEventListener("click", (event) => {
 			event.stopPropagation();
 			const targetId = chip.dataset.skillRef;
-			const target = doc.querySelector<HTMLElement>(`.skill[data-skill-id="${targetId}"]`);
+			const target = Array.from(doc.querySelectorAll<HTMLElement>(".skill")).find(
+				(el) => el.dataset.skillId === targetId
+			);
 			target?.classList.add("open");
 			target?.scrollIntoView({ block: "center" });
 		});

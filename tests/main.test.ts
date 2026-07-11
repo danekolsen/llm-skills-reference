@@ -79,4 +79,52 @@ describe("boot", () => {
 		toggle.click();
 		expect(document.documentElement.dataset.theme).not.toBe(initialTheme);
 	});
+
+	it("navigates to a cross-referenced skill via chip click even when the id contains a quote character", () => {
+		Element.prototype.scrollIntoView ??= () => {};
+
+		const dataWithQuoteId: Data = {
+			skills: [
+				{
+					id: "a",
+					categoryId: "personal",
+					name: "Skill A",
+					invocation: "auto",
+					description: "does a",
+					summary: "does a",
+					tags: ["git"],
+					dependsOn: ["b", 'c"d']
+				},
+				{
+					id: "b",
+					categoryId: "personal",
+					name: "Skill B",
+					invocation: "manual",
+					description: "does b",
+					summary: "does b"
+				},
+				{
+					id: 'c"d',
+					categoryId: "personal",
+					name: "Skill C",
+					invocation: "manual",
+					description: "does c",
+					summary: "does c"
+				}
+			]
+		};
+		document.getElementById("skills-data")!.textContent = JSON.stringify(dataWithQuoteId);
+
+		boot(document, window);
+
+		const chip = Array.from(document.querySelectorAll<HTMLButtonElement>(".skill-ref-chip")).find(
+			(el) => el.dataset.skillRef === 'c"d'
+		);
+		expect(() => chip?.click()).not.toThrow();
+
+		const target = Array.from(document.querySelectorAll<HTMLElement>(".skill")).find(
+			(el) => el.dataset.skillId === 'c"d'
+		);
+		expect(target?.classList.contains("open")).toBe(true);
+	});
 });
