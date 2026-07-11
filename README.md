@@ -17,13 +17,13 @@ open dist/index.html
 
 1. Clone this repo.
 2. Edit `config.json` to describe your own categories and where your skills live (the `scanPaths` field — see `SCHEMA.md`).
-3. Hand this repo, plus access to your environment, to an agent, and ask it to run the `update-skills-doc` skill (`.cursor/skills/update-skills-doc/SKILL.md`, shipped in this repo — see "Keeping the catalog in sync" below). On a fresh `data.json` this treats every skill on disk as an ADD: it reads each `SKILL.md` in full, not just its frontmatter, so entries come in with `location`, `tags`, and — where the skill's own docs support it — `descriptionIntro`/`descriptionBullets`/`howToUse` already filled in, instead of a bare name/description.
+3. Hand this repo, plus access to your environment, to an agent, and ask it to run the `update-skills-doc` skill (`skills/update-skills-doc/SKILL.md`, shipped in this repo — see "Keeping the catalog in sync" below). On a fresh `data.json` this treats every skill on disk as an ADD: it reads each `SKILL.md` in full, not just its frontmatter, so entries come in with `location`, `tags`, and — where the skill's own docs support it — `descriptionIntro`/`descriptionBullets`/`howToUse` already filled in, instead of a bare name/description.
 4. Run `npm run build` to produce your own `dist/index.html`.
 
 ## Keeping the catalog in sync
 
 This repo ships its own `update-skills-doc` skill at
-`.cursor/skills/update-skills-doc/SKILL.md` — a real, non-fictional example in
+`skills/update-skills-doc/SKILL.md` — a real, non-fictional example in
 `data.json` (see the `project` category) as well as a working tool. Point an
 agent at it (or just ask it to "update the skill catalog") and it will scan
 the locations declared in your `config.json`, diff them against `data.json`,

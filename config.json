@@ -12,7 +12,7 @@
 			"name": "Project",
 			"color": "#49cc90",
 			"description": "Skills committed to a specific project's repo, shared with anyone working in it.",
-			"scanPaths": ["./.cursor/skills/**/SKILL.md"]
+			"scanPaths": ["./skills/**/SKILL.md"]
 		}
 	]
 }

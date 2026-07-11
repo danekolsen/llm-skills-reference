@@ -34,7 +34,7 @@ catalog.
 Read [`references/doc-data-model.md`](references/doc-data-model.md) before
 editing: it holds the canonical-name/shared-skill rules and the grouped-review
 template. The `config.json`/`data.json` field reference itself lives in this
-project's root [`SCHEMA.md`](../../../SCHEMA.md) — read that for the exact
+project's root [`SCHEMA.md`](../../SCHEMA.md) — read that for the exact
 schema, don't duplicate it here.
 
 ## Branches

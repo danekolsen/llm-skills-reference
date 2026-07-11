@@ -40,7 +40,7 @@
 			"name": "update-skills-doc",
 			"invocation": "auto",
 			"description": "Reconcile this project's config.json/data.json skills catalog against the skills that actually exist on disk across every category's configured scan locations, then edit data.json (and config.json when a whole category is missing) to fix drift — skills missing from the catalog, entries no longer on disk, stale status/PR badges, and description drift — surfacing one grouped review so you approve each change (except auto-adding a freshly built skill). Use whenever the user asks to update the skill catalog, sync data.json, regenerate/refresh the skills reference, or check whether it's out of date, and as the final registration step after another skill-authoring workflow builds a new skill — even if the user doesn't name data.json explicitly.",
-			"location": ".cursor/skills/update-skills-doc/SKILL.md",
+			"location": "skills/update-skills-doc/SKILL.md",
 			"note": "Ships a references/doc-data-model.md (canonical-name/shared-skill rules, deep-field guidance, review template). Included as a real, working example of what a fully-fleshed-out catalog entry looks like — replace it with your own skills, or keep it around to maintain this catalog.",
 			"summary": "Keeps this project's data.json skills catalog in sync with what's actually on disk by diffing and patching its data in place.",
 			"descriptionIntro": "Here's what reconciling the catalog against disk involves:",
