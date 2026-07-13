@@ -50,3 +50,7 @@ skill file for details.
 - `npm run typecheck` — runs the TypeScript compiler in check-only mode.
 
 See `SCHEMA.md` for the full `config.json`/`data.json` field reference.
+
+## License
+
+MIT — see [`LICENSE`](./LICENSE).

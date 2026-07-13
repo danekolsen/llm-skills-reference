@@ -1,7 +1,7 @@
 {
 	"name": "skills-reference",
 	"version": "0.1.0",
-	"private": true,
+	"license": "MIT",
 	"type": "module",
 	"scripts": {
 		"dev": "tsx scripts/dev-server.ts",
