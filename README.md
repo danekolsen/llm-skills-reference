@@ -20,6 +20,18 @@ open dist/index.html
 3. Hand this repo, plus access to your environment, to an agent, and ask it to run the `update-skills-doc` skill (`skills/update-skills-doc/SKILL.md`, shipped in this repo — see "Keeping the catalog in sync" below). On a fresh `data.json` this treats every skill on disk as an ADD: it reads each `SKILL.md` in full, not just its frontmatter, so entries come in with `location`, `tags`, and — where the skill's own docs support it — `descriptionIntro`/`descriptionBullets`/`howToUse` already filled in, instead of a bare name/description.
 4. Run `npm run build` to produce your own `dist/index.html`.
 
+### Example first-run prompts
+
+What you tell the agent on that first run controls how wide it searches. Two common cases:
+
+**"Search far and wide"** — you want a full inventory of every AI skill available on your device, including ones you forgot you had:
+
+> Populate this catalog with every AI skill you can find on my system — my personal skills, any IDE/CLI built-ins, plugin or marketplace skills, and anything committed to a repo I work in. Search beyond whatever `config.json` already lists; if you find a scan location it's missing, add it. Then run `npm run build` and start the dev server so I can review it.
+
+**"Just look in these folders"** — you already know exactly where your skills live and want the catalog scoped to just those:
+
+> Populate this catalog using only these locations: `~/.claude/skills/**/SKILL.md` and `./skills/**/SKILL.md` (edit to match your own paths). Don't go looking for anything outside of those. Update `config.json`'s `scanPaths` to match, then run `npm run build` and start the dev server so I can review it.
+
 ## Keeping the catalog in sync
 
 This repo ships its own `update-skills-doc` skill at
