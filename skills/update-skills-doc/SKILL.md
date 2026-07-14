@@ -34,14 +34,16 @@ edits the catalog back into agreement. The goal each run is the same: the
 catalog should reflect every AI skill actually usable on this device, not a
 convenient subset.
 
-**Reconcile, don't regenerate.** `config.json`, the fields of `data.json`
-you're not touching, and everything under `src/`/`scripts/` stay untouched;
-every change lands inside `data.json`'s `skills` array. The one structural
-exception is adding a whole missing category, which also needs a
-`config.json` entry (with its own `color` and `scanPaths`). After edits, run
-`npm run build` — it validates every `categoryId`/`dependsOn` foreign key and
-regenerates `dist/index.html`; a build failure means the edit broke the
-catalog.
+**Reconcile, don't regenerate.** The fields of `data.json` you're not
+touching stay untouched; every change lands inside `data.json`'s `skills`
+array. The one structural exception is adding a whole missing category,
+which also needs a `config.json` entry (with its own `color` and
+`scanPaths`). Every edit — of any size — is applied by running
+`scripts/apply-catalog-edits.ts` with a payload describing exactly what was
+approved (see step 7); nothing under `src/` or `scripts/` is ever edited by
+hand, including `config.json`/`data.json` themselves. That script's own
+validation (the same rules `npm run build` enforces) is what catches a broken
+`categoryId`/`dependsOn` foreign key before anything is written.
 
 Read [`references/doc-data-model.md`](references/doc-data-model.md) before
 editing: it holds the canonical-name/shared-skill rules and the grouped-review
@@ -72,7 +74,7 @@ without asking:
 - [ ] 4. Diff disk against data.json into the six drift buckets
 - [ ] 5. Settle badge/status questions with a lightweight branch/PR check
 - [ ] 6. Present ONE grouped review; auto-apply only the just-built skill
-- [ ] 7. Apply approved edits to data.json/config.json, validate, and build
+- [ ] 7. Apply approved edits via scripts/apply-catalog-edits.ts (dry-run then real), build
 ```
 
 ### 1. Fix the mode
@@ -241,32 +243,56 @@ fully decided.
 
 ### 7. Apply approved edits and confirm
 
-Edit `data.json`'s `skills` array directly: add/update/remove only the
-affected skill objects, matching the existing field order and using tabs like
-the rest of the file — this is real JSON, so parse it, mutate the
-deserialized structure, and write it back, rather than hand-patching text. New
-ADD entries should carry the deep fields derived in step 2 (`location`,
-`tags`, and `descriptionIntro`/`descriptionBullets`/`howToUse` where the
-skill's body supports them) — a bare `name`/`description`/`summary` entry is
-a regression, not a shortcut. For an approved missing-scan-location item, add
-either a whole new category as a new object in `config.json`'s `categories`
-array (with a `color` and `scanPaths`, following the shape of the existing
-categories) or a new entry in an existing category's `scanPaths` array,
-whichever the review proposed. For an approved category-scope split, add one
-new category per repo (each with its own `color` and only that repo's
-`scanPaths`), update or remove the old catch-all category, and update every
-affected skill's `categoryId` in `data.json` to its new home. Skipped items
-are left untouched and recorded as deferred.
+Never hand-patch `config.json`/`data.json` text and never write a one-off
+script to do it, regardless of how many items were approved — even a single
+approved item goes through this project's own
+`scripts/apply-catalog-edits.ts`. That script exists specifically so every
+run applies edits the same validated, tested way, instead of each run
+re-deriving its own JSON-serialization approach (a large first population run
+in particular tends to produce long, quote- and backtick-heavy prose across
+dozens of fields, which is exactly the shape of edit that's error-prone to
+hand-patch as text).
 
-Then run `npm run build` to confirm: it validates that every skill's
-`categoryId` resolves and every `dependsOn` id resolves (see `SCHEMA.md`), and
-regenerates `dist/index.html`. A failed build means an edit introduced a
-dangling reference — fix it before finishing. Summarize applied / skipped /
+Translate every approved review item into one `CatalogEditsPayload` object —
+its exact shape (`newCategories`, `scanPathAdditions`, `additions`,
+`removals`, `updates`, `categoryReassignments`) is documented as JSDoc on that
+type in `scripts/apply-catalog-edits.ts`, with one field per drift bucket from
+step 4. New `additions` entries should carry the deep fields derived in step 2
+(`location`, `tags`, and `descriptionIntro`/`descriptionBullets`/`howToUse`
+where the skill's body supports them) — a bare `name`/`description`/`summary`
+entry is a regression, not a shortcut. Skipped items are simply left out of
+the payload and recorded as deferred.
+
+Write the payload to a temporary JSON file **outside this repo** (e.g.
+`/tmp/catalog-edits.json` — never inside `scripts/`, which this skill never
+touches except to invoke the one blessed script below), then run:
+
+```bash
+npx tsx scripts/apply-catalog-edits.ts /tmp/catalog-edits.json --dry-run
+```
+
+The dry run applies every operation in memory, validates the result with the
+same rules `npm run build` enforces, and prints the exact summary (categories
+added, scanPaths added, skills added/updated/removed/reassigned) without
+writing anything — use it to confirm the payload does exactly what the review
+promised before committing to it. A validation failure here means a bad
+payload (e.g. a typo'd `categoryId`), not a bad catalog; fix the payload and
+re-run the dry run rather than editing `config.json`/`data.json` to work
+around it.
+
+Once the dry-run summary matches expectations, re-run the identical command
+without `--dry-run` to write `config.json`/`data.json` for real, then run
+`npm run build` to regenerate `dist/index.html` (the script already validated
+the data, so this should always succeed — treat a build failure at this point
+as a bug in the script or payload, not something to patch around by hand).
+Delete the temporary payload file afterward. Summarize applied / skipped /
 deferred items.
 
-**Done when:** `npm run build` succeeds, all approved edits (and the
+**Done when:** the dry run's summary matched the approved review exactly, the
+real run and `npm run build` both succeeded, all approved edits (and the
 registration auto-add) are present in `data.json`/`config.json`, skipped items
-are unchanged, and the summary is given.
+are unchanged, the temporary payload file is deleted, and the summary is
+given.
 
 ## Guardrails
 
@@ -287,8 +313,14 @@ are unchanged, and the summary is given.
   surfaced, not removed.
 - **Never flip** a badge/status/description without approval, even when a PR
   status check says it's safe.
-- **Edit `data.json`/`config.json` directly** — never touch `src/` (rendering,
-  validation, or search logic) or `scripts/`.
+- **Apply every edit through `scripts/apply-catalog-edits.ts`, no exceptions.**
+  Never hand-patch `config.json`/`data.json` text and never write your own
+  one-off script to serialize the edits, no matter how small the payload is —
+  a single-skill update goes through the same dry-run-then-real invocation as
+  a 50-skill population run. Never touch `src/` (rendering, validation, or
+  search logic) or edit anything under `scripts/` — the one exception is
+  *invoking* `scripts/apply-catalog-edits.ts` itself, which you may run but
+  never modify (same as `scripts/build.ts`).
 - **Recursion guard:** never invoke whatever skill-authoring workflow called
   you in registration mode. This skill is always the callee, never the
   caller.

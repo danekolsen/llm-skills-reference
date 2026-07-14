@@ -61,4 +61,20 @@ describe("validateData", () => {
 		const data: Data = { skills: [] };
 		expect(validateData(baseConfig, data)).toEqual([]);
 	});
+
+	it("flags two skills sharing the same id", () => {
+		const data: Data = { skills: [makeSkill(), makeSkill({ name: "skill-a-again" })] };
+		expect(validateData(baseConfig, data)).toEqual([{ message: 'Skill id "skill-a" is used by more than one skill' }]);
+	});
+
+	it("flags two categories sharing the same id", () => {
+		const config: Config = {
+			categories: [
+				{ id: "personal", name: "Personal", color: "#000", description: "d", scanPaths: [] },
+				{ id: "personal", name: "Personal Again", color: "#111", description: "d2", scanPaths: [] }
+			]
+		};
+		const data: Data = { skills: [makeSkill()] };
+		expect(validateData(config, data)).toEqual([{ message: 'Category id "personal" is used by more than one category' }]);
+	});
 });

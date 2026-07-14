@@ -48,6 +48,7 @@ skill file for details.
 - `npm run build` — validates `config.json`/`data.json` and produces the portable `dist/index.html`.
 - `npm run test` — runs the test suite.
 - `npm run typecheck` — runs the TypeScript compiler in check-only mode.
+- `npx tsx scripts/apply-catalog-edits.ts <payload.json> [--dry-run]` — applies a batch of catalog edits (new categories, scanPath additions, skill adds/removes/updates/reassignments) from a JSON payload, validating before writing. This is how `update-skills-doc` always writes its approved edits, at any batch size — see the `CatalogEditsPayload` type in that script for the payload shape.
 
 See `SCHEMA.md` for the full `config.json`/`data.json` field reference.
 
