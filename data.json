@@ -1,40 +1,6 @@
 {
 	"skills": [
 		{
-			"id": "example-scanner",
-			"categoryId": "personal",
-			"name": "example-scanner",
-			"invocation": "auto",
-			"description": "Example skill: scans a folder and summarizes what it finds. Replace this with your own skills — see README.md.",
-			"summary": "Scans a folder and summarizes what it finds.",
-			"tags": ["example", "filesystem"],
-			"interactive": false,
-			"updated": "2026-07-11"
-		},
-		{
-			"id": "example-reporter",
-			"categoryId": "personal",
-			"name": "example-reporter",
-			"invocation": "manual",
-			"description": "Example skill: formats example-scanner's output into a report. Depends on example-scanner having run first.",
-			"summary": "Formats scan output into a shareable report.",
-			"tags": ["example", "reporting"],
-			"interactive": true,
-			"dependsOn": ["example-scanner"],
-			"updated": "2026-07-11"
-		},
-		{
-			"id": "example-project-linter",
-			"categoryId": "project",
-			"name": "example-project-linter",
-			"invocation": "auto",
-			"description": "Example skill: a project-specific linting workflow, showing what a Project-category entry looks like.",
-			"summary": "Runs a project-specific lint workflow.",
-			"tags": ["example", "linting"],
-			"interactive": false,
-			"updated": "2026-07-11"
-		},
-		{
 			"id": "update-skills-doc",
 			"categoryId": "project",
 			"name": "update-skills-doc",
@@ -59,9 +25,1755 @@
 				"Presents one grouped review of every add/removal/badge-drift/description-drift item and pauses, waiting for your per-item approve or skip before changing anything — except a just-built skill's own entry, which it auto-adds.",
 				"Once you respond, applies only the items you approved, leaves skipped ones untouched, validates data.json against config.json, and runs npm run build to confirm the catalog still builds cleanly."
 			],
-			"tags": ["skill-authoring", "json", "data-sync", "meta"],
+			"tags": [
+				"skill-authoring",
+				"json",
+				"data-sync",
+				"meta"
+			],
 			"interactive": true,
 			"updated": "2026-07-10"
+		},
+		{
+			"id": "writing-great-skills",
+			"categoryId": "personal",
+			"name": "writing-great-skills",
+			"invocation": "manual",
+			"description": "Reference for writing and editing skills well — the vocabulary and principles that make a skill predictable.",
+			"location": "~/.cursor/skills/writing-great-skills/SKILL.md",
+			"summary": "Reference for the vocabulary and principles that make a skill predictable, covering invocation, descriptions, hierarchy, and pruning.",
+			"descriptionIntro": "The body covers a set of core principles that make a skill predictable, spanning several topics.",
+			"descriptionBullets": [
+				"Invocation: choosing between model-invoked (autonomous, costs context load) and user-invoked (manual, costs cognitive load) skills, plus when to add a router skill",
+				"Writing the description: front-loading the leading word, one trigger per branch, cutting identity already covered in the body",
+				"Information hierarchy: the ladder from in-skill steps to in-skill reference to external/disclosed reference, and how completion criteria drive thorough legwork",
+				"When to split: cutting skills by invocation (a distinct leading word) or by sequence (to avoid premature completion)",
+				"Pruning: keeping a single source of truth, checking relevance, and aggressively hunting no-op sentences",
+				"Leading words: reusing pretrained concepts to anchor execution and invocation in fewer tokens",
+				"Failure modes: diagnosing premature completion, duplication, sediment, sprawl, no-ops, and negation"
+			],
+			"howToUse": [
+				"Consult the relevant section on demand — invocation choice, description writing, information hierarchy, splitting, pruning, leading words, or failure diagnosis — when authoring or editing a skill."
+			],
+			"tags": [
+				"skill-authoring",
+				"reference",
+				"vocabulary",
+				"predictability",
+				"meta"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "onboard-feature",
+			"categoryId": "personal",
+			"name": "onboard-feature",
+			"invocation": "auto",
+			"description": "Explores an unfamiliar feature or area of the codebase end-to-end — every entry point, the full data/control flow, key files and functions, tests, and gotchas — then delivers a structured walkthrough so the developer has enough context to work on it independently. Use whenever the user wants to understand, explain, walk through, ramp up on, get up to speed on, or onboard to a feature, module, subsystem, or flow they haven't worked on before — including casual or indirect phrasing like \"how does X work\", \"walk me through the Y flow\", \"I need to fix a bug in Z but don't know where to start\", or just naming a feature, ticket, or file without asking for an explanation outright.",
+			"location": "~/.cursor/skills/onboard-feature-compiled/SKILL.md",
+			"summary": "Explores an unfamiliar feature end-to-end — entry points, full trace, tests, gotchas — into a structured onboarding walkthrough.",
+			"howToUse": [
+				"Restates the feature or flow in one sentence, asking a clarifying question only if the request is genuinely ambiguous.",
+				"Identifies every entry point into the feature (UI, API, CLI, jobs, webhooks) rather than just the one the user mentioned.",
+				"Traces the code through every layer from trigger to persistence and back, following it across repo boundaries and collecting types, tests, config, and history along the way.",
+				"Confirms it can answer key questions about the most important files, the happy path, non-obvious surprises, and where to start working, before writing anything.",
+				"Presents the findings in a structured markdown template ordered by execution flow, citing real file paths and functions.",
+				"Offers to go deeper into any file, branch, or adjacent feature that came up during exploration."
+			],
+			"tags": [
+				"codebase-exploration",
+				"onboarding",
+				"documentation",
+				"feature-mapping"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "skill-creator",
+			"categoryId": "personal",
+			"name": "skill-creator",
+			"invocation": "auto",
+			"description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.",
+			"location": "~/.cursor/skills/skill-creator/SKILL.md",
+			"summary": "Guides drafting and iteratively improving Agent Skills via with-skill/baseline evals, a review viewer, and description optimization.",
+			"descriptionIntro": "At a high level, the skill frames creating and improving a skill as one continuous loop with these stages.",
+			"descriptionBullets": [
+				"Deciding what the skill should do and drafting it",
+				"Writing test prompts and running them with and without the skill via subagents",
+				"Helping the user evaluate results qualitatively (via a generated review viewer) and quantitatively (via drafted assertions and benchmarks)",
+				"Rewriting the skill based on feedback and repeating the loop until satisfied",
+				"Expanding the test set and trying again at larger scale",
+				"Optionally optimizing the skill's description for better triggering accuracy using a train/test eval loop",
+				"Packaging the finished skill into an installable .skill file when supported"
+			],
+			"howToUse": [
+				"Captures intent and interviews the user about triggers, output format, and whether test cases are needed.",
+				"Writes or edits the SKILL.md following progressive disclosure and skill-writing patterns.",
+				"Drafts 2-3 test prompts, shares them for approval, then spawns parallel with-skill and baseline subagent runs.",
+				"While runs are in progress, drafts quantitative assertions and explains them to the user.",
+				"Grades each run's outputs, aggregates them into a benchmark, and launches the eval-viewer for qualitative and quantitative review, then pauses for the user to review and give feedback.",
+				"Reads the user's feedback and improves the skill, generalizing from it rather than overfitting to the examples.",
+				"Reruns test cases in a new iteration, repeating the review loop until the user is happy, feedback is all empty, or progress stalls.",
+				"Optionally runs the description-optimization loop — generating trigger eval queries, getting user review, running the optimization script, and applying the best description.",
+				"Optionally packages the finished skill into a .skill file for the user."
+			],
+			"tags": [
+				"skill-authoring",
+				"evals",
+				"benchmarking",
+				"iteration",
+				"description-optimization"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "quick-research",
+			"categoryId": "personal",
+			"name": "quick-research",
+			"invocation": "auto",
+			"description": "Runs a fast, scoped web-research pass on a topic and returns a short list of sourced findings, each paired with a concrete suggestion for how it could change a plan, design, or skill under construction. Use when the user (or another skill) wants a quick best-practices check or a sanity check against current knowledge before committing to a design — e.g. \"check what's out there for X first\", \"any best practices I should know about?\", or as a pre-step another skill runs before interviewing the user. Not for exhaustive, report-length deep dives — for that, the user should ask for a full research report instead.",
+			"location": "~/.cursor/skills/quick-research/SKILL.md",
+			"summary": "Runs a fast, scoped web-research pass and returns sourced findings paired with concrete suggested changes to a plan.",
+			"howToUse": [
+				"Scopes the research in one line — what's being investigated and what decision it will inform — asking if unclear or using the caller's given scope.",
+				"Decomposes the topic into 2-4 tight sub-questions, flagging if the ask has grown beyond a quick check.",
+				"Searches each sub-question with 2-3 queries, stopping once answered or at diminishing returns.",
+				"Reads past search snippets, fetching the full page for the 1-3 sources that actually matter.",
+				"Tracks sourcing and recency for every claim, flagging single-source or stale claims as lower-confidence.",
+				"Makes sure it can explain any unfamiliar concept in plain language before surfacing it, reading further if it can't.",
+				"Synthesizes findings into a structured template and presents them as proposals — to the user directly, or back to a calling skill — rather than a long-form report, then pauses for approval before anything is treated as adopted."
+			],
+			"tags": [
+				"research",
+				"web-search",
+				"sourcing",
+				"findings",
+				"sanity-check"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "super-skill-builder",
+			"categoryId": "personal",
+			"name": "super-skill-builder",
+			"invocation": "auto",
+			"description": "Builds a new Agent Skill by convening a panel of installed skill-builder skills, running each one in an isolated subagent against the same brief, then comparing the candidates and synthesizing the strongest single skill. Use this whenever the user wants to create, build, author, generate, or \"turn something into\" a skill — including phrasings like \"make a skill for X\", \"build a new skill\", \"I want a skill that…\", or \"can you turn this workflow into a skill\" — even if they don't name this skill explicitly.",
+			"location": "~/.cursor/skills/super-skill-builder/SKILL.md",
+			"summary": "Orchestrates a panel of skill-builder skills to each draft a candidate skill, then compares and synthesizes the best one.",
+			"howToUse": [
+				"Captures the user's raw skill request verbatim as the brief and restates the skill's rough intent without designing yet.",
+				"Assembles the panel of skill-builder skills, safety-checking and installing any missing ones with user approval, then bridges them into the host agent's own skill directory.",
+				"Reads each panelist's SKILL.md to build a deduped set of grill questions covering every panelist's decision points.",
+				"Offers an optional pre-grill web research pass on best practices, presenting findings for the user to accept or decline before the grill starts.",
+				"Runs a one-question-at-a-time grill session over the question set and turns the answers into a consolidated spec.",
+				"Fans out the verbatim brief and spec to one isolated subagent per panelist, each building its own candidate skill at a unique path.",
+				"Compares the candidates with a table and pros/cons, proposes a synthesis plan, and pauses for the user to confirm or adjust it.",
+				"Writes the synthesized skill to the host agent's skill directory per the confirmed plan.",
+				"Verifies the finished skill against both the consolidated spec and the original verbatim brief, fixing any gaps found.",
+				"Removes the throwaway candidate artifacts with user approval, or lists them for manual deletion if removal is blocked.",
+				"Registers the new skill in the personal skills catalog via update-skills-doc, if that skill is installed."
+			],
+			"tags": [
+				"skill-authoring",
+				"orchestration",
+				"subagents",
+				"synthesis",
+				"meta"
+			],
+			"interactive": true,
+			"dependsOn": [
+				"update-skills-doc-personal"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "enhanced-babysit",
+			"categoryId": "personal",
+			"name": "enhanced-babysit",
+			"invocation": "auto",
+			"description": "Keep a GitHub pull request merge-ready by resolving conflicts, triaging comments (including Bugbot), and fixing CI in a loop, using the GitKraken/GitLens MCP for PR details, comments, and reviews instead of the gh CLI wherever that MCP has a tool for it. A personal, GitKraken-powered evolution of the built-in \"babysit\" skill. Use when the user asks to babysit a PR, keep a PR merge-ready, or triage PR comments/CI.",
+			"location": "~/.cursor/skills/enhanced-babysit/SKILL.md",
+			"summary": "Keeps a GitHub PR merge-ready by looping conflict resolution, comment triage, and CI fixes via the GitKraken MCP.",
+			"descriptionIntro": "It's upfront about a few gaps where the GitKraken MCP has no equivalent tool and falls back to gh/shell instead.",
+			"descriptionBullets": [
+				"No CI/checks status tool, so CI diagnosis always falls back to gh",
+				"No local working-tree status tool, so uncommitted-change checks use git status/diff via shell",
+				"No thread-resolve or inline-reply tool, so it can only post a general PR comment or a new review rather than resolving an individual thread"
+			],
+			"howToUse": [
+				"Identifies the PR by resolving the repo org/name from the git remote and the PR number via gh, then uses GitKraken tools exclusively afterward.",
+				"Resolves merge conflicts by fetching and rebasing/merging against the base branch, editing conflicted files directly, and stopping to ask if the two sides' intent genuinely conflicts.",
+				"Triages unresolved PR comments, validating each one (especially Bugbot) before fixing valid issues or explaining disagreement, then posts a summary comment referencing the fix and commit.",
+				"Diagnoses and fixes CI failures caused by this PR's own changes via gh, merging in the latest base branch if failures look unrelated, and repeats the conflict/comment/CI loop until the PR is merge-ready."
+			],
+			"tags": [
+				"github",
+				"pull-request",
+				"ci",
+				"code-review",
+				"gitkraken"
+			],
+			"interactive": false,
+			"dependsOn": [
+				"babysit"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "regression-tracer",
+			"categoryId": "personal",
+			"name": "regression-tracer",
+			"invocation": "auto",
+			"description": "Traces a suspected code regression back through git history to recover what the code looked like before it broke, then adapts that prior implementation into a fix instead of inventing one from scratch. Use when code looks dead, unused, or orphaned (e.g. a CSS class, prop, or config key referenced but never defined); when behavior, styling, or structure is inconsistent across otherwise-parallel/sibling implementations (one component/handler/branch got a real port, another didn't); when the user reports something \"used to work\", \"broke recently\", or \"looks like a leftover from a refactor\"; or when a bug's root cause seems to be something a past change removed, forgot to port, or renamed to nothing rather than a gap in the original design. Trigger this proactively even when the user doesn't say \"regression\" or mention git by name — noticing \"there's no CSS rule for this class\" or \"why does this one branch differ from its three siblings\" is the signal itself, before writing a fix from scratch.",
+			"location": "~/.cursor/skills/regression-tracer/SKILL.md",
+			"summary": "Traces a suspected regression through git history, verifies it via a sibling check, then adapts the recovered fix forward.",
+			"descriptionIntro": "A trace only counts as complete once every one of these holds.",
+			"descriptionBullets": [
+				"A specific commit is cited by sha and message, not a vague guess",
+				"The old and new code are actually shown, not just described",
+				"The verdict (regression, intentional, or inconclusive) was stated outright",
+				"The fix is ported forward from the recovered implementation, not a blind revert or a from-scratch reinvention",
+				"The user saw the evidence before the fix landed",
+				"If a bisect was used, the culprit commit is named and the working tree is confirmed back to normal"
+			],
+			"howToUse": [
+				"Picks a branch — a known suspect to diff directly, or an unknown/behavioral case that needs bisecting to localize first — and names which branch it's in.",
+				"Recovers the exact pre-regression code and the commit(s) that touched it, using the git commands for the chosen branch.",
+				"Runs a sibling check, diffing every comparable element from the same commit to see if only the suspect was dropped or renamed.",
+				"States an explicit verdict — regression, intentional, or no regression found/inconclusive — based on the sibling check evidence.",
+				"Walks the user through the trigger, the commit, the before/after code, and the verdict in plain conversation before proposing any fix, then pauses for the user's reaction.",
+				"Adapts the recovered implementation forward through any conventions that have since changed, rather than pasting it back verbatim or reinventing it from scratch."
+			],
+			"tags": [
+				"git",
+				"debugging",
+				"regression",
+				"git-bisect",
+				"root-cause"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "update-skills-doc-personal",
+			"categoryId": "personal",
+			"name": "update-skills-doc",
+			"invocation": "auto",
+			"description": "Reconcile the personal Swagger-style skills catalog at ~/.cursor/skills/skills-reference.html against the skills that actually exist on disk across every skill folder, then surgically edit its CATEGORIES data in place to fix drift — skills missing from the doc, entries no longer on disk, stale status/PR badges, and description drift — surfacing one grouped review so you approve each change (except auto-adding a freshly built skill). Use whenever the user asks to update the skill doc, sync the skills reference, regenerate/refresh the skills catalog, or check whether it's out of date, and as the final registration step of super-skill-builder after a new skill is created — even if the user doesn't name the HTML file explicitly.",
+			"location": "~/.cursor/skills/update-skills-doc/SKILL.md",
+			"note": "A different tool than this project's own update-skills-doc (categoryId: project) — this one maintains a separate HTML catalog at ~/.cursor/skills/skills-reference.html, not this repo's config.json/data.json.",
+			"summary": "Reconciles a personal skills-reference.html catalog against disk, editing its CATEGORIES data in place after one grouped approval.",
+			"descriptionIntro": "The skill enforces a few hard guardrails around how it edits the catalog.",
+			"descriptionBullets": [
+				"Only one automatic change is ever applied without asking: the just-built skill's add during super-skill-builder registration mode",
+				"It never deletes a doc entry automatically — doc-only entries are surfaced, not removed",
+				"It never flips a badge, status, or description without approval, even when a merge check says it's safe",
+				"It edits the CATEGORIES data in place and never regenerates or touches the render()/search logic",
+				"It never invokes super-skill-builder itself, staying strictly the callee"
+			],
+			"howToUse": [
+				"Fixes the mode — standalone (user-triggered) or super-skill-builder registration (a just-built skill was passed in) — and records that skill's name, path, and category if in registration mode.",
+				"Enumerates every skill on disk across the scan map, resolving each to its canonical name, description, and invocation.",
+				"Parses the doc's existing CATEGORIES entries and flags any scan-map category missing from the doc.",
+				"Diffs disk against the doc into four drift buckets: additions, doc-only entries, badge/status drift, and description drift.",
+				"Runs a lightweight branch/PR check to turn merge-dependent badge or doc-only questions into concrete recommendations.",
+				"Presents one grouped review of every drift item for approval, auto-applying only the just-built skill's addition in registration mode, then pauses for the user's per-item approvals.",
+				"Applies the approved edits directly in the CATEGORIES data, confirms the file still parses and renders, and summarizes what was applied, skipped, or deferred."
+			],
+			"tags": [
+				"skill-authoring",
+				"documentation",
+				"catalog",
+				"drift-reconciliation",
+				"html"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "grill-me",
+			"categoryId": "personal",
+			"name": "grill-me",
+			"invocation": "manual",
+			"description": "A relentless interview to sharpen a plan or design.",
+			"location": "~/.cursor/skills/grill-me/SKILL.md",
+			"summary": "Manual trigger that runs a /grilling session to relentlessly interview the user about their plan.",
+			"howToUse": [
+				"Runs a /grilling session to relentlessly interview the user about their plan or design."
+			],
+			"tags": [
+				"interview",
+				"planning",
+				"manual-trigger",
+				"alias"
+			],
+			"interactive": false,
+			"dependsOn": [
+				"grilling"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "grilling",
+			"categoryId": "personal",
+			"name": "grilling",
+			"invocation": "auto",
+			"description": "Grill the user relentlessly about a plan or design. Use when the user wants to stress-test a plan before building, or uses any 'grill' trigger phrases.",
+			"location": "~/.cursor/skills/grilling/SKILL.md",
+			"summary": "Interviews the user one question at a time about every branch of a plan, recommending an answer each time.",
+			"howToUse": [
+				"Interviews the user one question at a time about each branch of the plan, recommending an answer for each, looking up discoverable facts itself rather than asking, and holds off on enacting the plan until the user confirms shared understanding."
+			],
+			"tags": [
+				"interview",
+				"planning",
+				"design-review",
+				"decision-making"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "morning-triage",
+			"categoryId": "personal",
+			"name": "morning-triage",
+			"invocation": "auto",
+			"description": "Generates a personal daily digest canvas of pull requests and Linear issues that need attention, combining GitLens Launchpad prioritization across the frontend and on-prem repos with Linear issues assigned to the user. Use when the user asks for their morning triage, daily digest, \"what needs my attention\", a PR/issue triage, or a review queue.",
+			"location": "~/.cursor/skills/morning-triage/SKILL.md",
+			"summary": "Builds a personal canvas digest of PRs (via GitLens Launchpad) and in-progress Linear issues assigned to the user.",
+			"howToUse": [
+				"Calls GitLens Launchpad once per repo (frontend and on-prem) to gather PRs already grouped by what needs attention, merging and deduping results across both.",
+				"Calls the Linear list_issues tool for issues assigned to the user, filtering to only started/unstarted issues and sorting by priority then recency.",
+				"Skips any data source that errors or returns nothing, mentioning the gap in the chat reply rather than showing an error or empty section in the canvas.",
+				"Writes (or overwrites) a canvas file with a header stat summary, one section per non-empty Launchpad category, and a Linear issues section grouped by priority, omitting any section with zero items.",
+				"Replies in chat with a 1-2 sentence summary of the highest-priority items and a link to the canvas."
+			],
+			"tags": [
+				"canvas",
+				"github",
+				"linear",
+				"triage",
+				"daily-digest",
+				"gitlens"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "post-on-prem-issue",
+			"categoryId": "personal",
+			"name": "post-on-prem-issue",
+			"invocation": "manual",
+			"description": "Hand off a confirmed backend/on-prem bug to the backend team — safely sync the local on-prem repo, reconfirm the issue still reproduces, and only then draft and post a succinct Linear issue to the Product (SPR) team after your explicit approval.",
+			"location": "~/.cursor/skills/post-on-prem-issue/SKILL.md",
+			"summary": "Hands a confirmed backend bug to the Product/SPR Linear team, gated by sync, reproduction, and explicit approval.",
+			"descriptionIntro": "The workflow leans on a few guiding values to keep the handoff clean and safe.",
+			"descriptionBullets": [
+				"Confirms before filing, since a local checkout can lag develop and the most common waste is filing an already-fixed bug",
+				"Keeps issues succinct — just what's needed to reproduce and understand the problem",
+				"Never posts without explicit approval; the full metadata and body are reviewed in chat first",
+				"Never touches the user's git work beyond a conservative sync, stopping and reporting instead of mutating a risky tree"
+			],
+			"howToUse": [
+				"Offers to sync the on-prem repo to the latest develop, doing a safe checkout-and-pull only on a clean tree and otherwise pasting git status and handing the decision back to the user, then pauses for the user's answer.",
+				"Asks the user to reconfirm the issue still reproduces against the now-current code, stopping and filing nothing if it's already resolved.",
+				"Asks which issue template to use — Bug, Suggestion, or custom — and loads that template's defaults.",
+				"Drafts the title and body itself following the template, then prompts the user for status, assignee, project, and labels using live options pulled from Linear.",
+				"Presents the full drafted issue for review and waits for explicit approval before calling save_issue to post it, then returns the created issue's identifier and URL."
+			],
+			"tags": [
+				"linear",
+				"bug-report",
+				"on-prem",
+				"handoff",
+				"git-sync",
+				"approval-gate"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "create-subagent",
+			"categoryId": "cursor-builtin",
+			"name": "create-subagent",
+			"invocation": "manual",
+			"description": "Create custom subagents for specialized AI tasks. Use when you want to create a new type of subagent, set up task-specific agents, configure code reviewers, debuggers, or domain-specific assistants with custom prompts.",
+			"location": "~/.cursor/skills-cursor/create-subagent/SKILL.md",
+			"summary": "Guides creating custom Cursor subagents: file format, effective descriptions, and project vs. user-level placement.",
+			"descriptionIntro": "Explains what subagents give you when used well:",
+			"descriptionBullets": [
+				"Preserve context by isolating exploration from the main conversation",
+				"Specialize behavior with focused system prompts for specific domains",
+				"Reuse configurations across projects with user-level subagents"
+			],
+			"howToUse": [
+				"Decide whether the subagent should be project-level (shared, in .cursor/agents/) or user-level (personal, in ~/.cursor/agents/).",
+				"Create the markdown file in the chosen agents directory.",
+				"Write the frontmatter with the required name and description fields.",
+				"Write the body as the subagent's system prompt, covering its workflow, output format, and constraints.",
+				"Test the new subagent by asking the AI to use it for a task."
+			],
+			"tags": [
+				"subagents",
+				"ai-agents",
+				"custom-prompts",
+				"agent-config"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "migrate-to-skills",
+			"categoryId": "cursor-builtin",
+			"name": "migrate-to-skills",
+			"invocation": "manual",
+			"description": "Convert 'Applied intelligently' Cursor rules (.cursor/rules/*.mdc) and slash commands (.cursor/commands/*.md) to Agent Skills format (.cursor/skills/). Use when you want to migrate rules or commands to skills, convert .mdc rules to SKILL.md format, or consolidate commands into the skills directory.",
+			"location": "~/.cursor/skills-cursor/migrate-to-skills/SKILL.md",
+			"summary": "Converts eligible 'Applied intelligently' rules and slash commands into Agent Skills format, preserving body content verbatim.",
+			"howToUse": [
+				"Creates the project and/or user skills directories if they don't already exist.",
+				"Dispatches parallel subagents to find eligible rule and command files (rules must have a description but no globs and no alwaysApply: true; commands are always eligible).",
+				"For each eligible file, reads it and writes a new SKILL.md with the required frontmatter while copying the original body content verbatim.",
+				"Deletes the original rule or command file after migrating it.",
+				"Summarizes the migrated files to the user, noting that the migration can be undone if they ask."
+			],
+			"tags": [
+				"migration",
+				"cursor-rules",
+				"slash-commands",
+				"skills"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "shell",
+			"categoryId": "cursor-builtin",
+			"name": "shell",
+			"invocation": "manual",
+			"description": "Runs the rest of a /shell request as a literal shell command. Use only when the user explicitly invokes /shell and wants the following text executed directly in the terminal.",
+			"location": "~/.cursor/skills-cursor/shell/SKILL.md",
+			"summary": "Executes the text after a /shell invocation directly as a terminal command, without rewriting or inspecting it first.",
+			"howToUse": [
+				"Treats all text after /shell as the literal command, runs it immediately without rewriting, explaining, or inspecting the repo first, then briefly reports the exit status and key stdout/stderr."
+			],
+			"tags": [
+				"shell",
+				"slash-command",
+				"terminal-execution"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "statusline",
+			"categoryId": "cursor-builtin",
+			"name": "statusline",
+			"invocation": "auto",
+			"description": "Configure a custom status line in the CLI. Use when the user mentions status line, statusline, statusLine, CLI status bar, prompt footer customization, or wants to add session context above the prompt.",
+			"location": "~/.cursor/skills-cursor/statusline/SKILL.md",
+			"summary": "Documents how to configure and script a custom CLI status line via cli-config.json and its JSON stdin session payload.",
+			"howToUse": [
+				"Adds a statusLine command entry to ~/.cursor/cli-config.json that spawns a script or inline command receiving a JSON session payload on stdin and prints text (optionally ANSI-colored, multi-line) rendered above the prompt."
+			],
+			"tags": [
+				"cli",
+				"statusline",
+				"configuration"
+			],
+			"interactive": false,
+			"dependsOn": [
+				"update-cli-config"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "onboard",
+			"categoryId": "cursor-builtin",
+			"name": "onboard",
+			"invocation": "manual",
+			"description": "Use /onboard for a focused Cursor onboarding flow that learns basic preferences, picks a first goal, and routes the user to the right next action.",
+			"location": "~/.cursor/skills-cursor/onboard/SKILL.md",
+			"summary": "Runs a scripted /onboard interview that learns the user's name/context, saves it to a personal rule, then routes to a next step.",
+			"descriptionIntro": "Follows a strict set of hard rules to keep onboarding lightweight and non-intrusive:",
+			"descriptionBullets": [
+				"Asks one question at a time and only uses tools within the defined Tool Boundary",
+				"Never inspects files, browses MCP descriptors, or changes settings during onboarding",
+				"Answers normal Cursor questions directly, then asks whether to continue or stop onboarding",
+				"Stops the flow once the user seems done, and drops the Tool Boundary restrictions afterward"
+			],
+			"howToUse": [
+				"Asks the user's preferred name, then pauses for their answer.",
+				"Asks about their work context and typical projects, then pauses for their answer.",
+				"Saves the name and work context to a personal 'User onboarding preferences' rule (skipped if the user declined or memory saving is unavailable).",
+				"Asks the user to pick a first goal — getting set up, starting a new project, automating their job, working on an existing project, or something else — then pauses for their choice.",
+				"Routes through a short guided flow for the chosen goal, asking one diagnostic question at a time and pausing for each answer.",
+				"Produces a compact handoff (recommended next step, suggested prompt, mode/tool to use) and, when Plan mode applies, asks whether to switch, pausing for the user's confirmation before doing so."
+			],
+			"tags": [
+				"onboarding",
+				"interview",
+				"setup-flow"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "canvas",
+			"categoryId": "cursor-builtin",
+			"name": "canvas",
+			"invocation": "auto",
+			"description": "A Cursor Canvas is a live React app that the user can open beside the chat. You MUST use a canvas when the agent produces a standalone analytical artifact — quantitative analyses, billing investigations, security audits, architecture reviews, data-heavy content, timelines, charts, tables, interactive explorations, repeatable tools, or any response that benefits from visual layout. Especially prefer a canvas when presenting results from MCP tools (Datadog, Databricks, Linear, Sentry, Slack, etc.) where the data is the deliverable — render it in a rich canvas rather than dumping it into a markdown table or code block. If you catch yourself about to write a markdown table, stop and use a canvas instead. You MUST also read this skill whenever you create, edit, or debug any .canvas.tsx file.",
+			"location": "~/.cursor/skills-cursor/canvas/SKILL.md",
+			"summary": "Defines when and how to build a standalone Cursor Canvas (.canvas.tsx), including file rules, design guardrails, and a slop self-check.",
+			"descriptionIntro": "Reserves a canvas for genuine standalone artifacts, using it when the agent produces:",
+			"descriptionBullets": [
+				"Quantitative analyses and metrics breakdowns",
+				"Billing or account investigations with structured findings from database queries",
+				"Security audits or architecture reviews with categorized findings",
+				"Cross-system data analyses and overlap reports",
+				"Structured data from MCP tools where the data itself is the deliverable",
+				"Financial analyses, margin decompositions, and usage trend reports, or large tables the user asked to see"
+			],
+			"howToUse": [
+				"Decides whether the requested output truly warrants its own standalone artifact rather than a normal chat reply.",
+				"Writes a single self-contained .canvas.tsx file at the exact managed canvases/ path, importing only from cursor/canvas, embedding all data inline with no empty placeholder sections.",
+				"Applies design guardrails (visual hierarchy, theme tokens, no gradients/emojis/shadows) and runs a pre-delivery self-check before returning the canvas.",
+				"Introduces the canvas to the user with a markdown link to its absolute path, adding a short explanation for a first or unsolicited canvas.",
+				"Troubleshoots a blank canvas by confirming it was saved to the exact managed directory path rather than debugging the directory itself."
+			],
+			"tags": [
+				"canvas",
+				"visualization",
+				"react",
+				"data-viz"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "create-skill",
+			"categoryId": "cursor-builtin",
+			"name": "create-skill",
+			"invocation": "auto",
+			"description": "Create Cursor Agent Skills. Use when authoring a new skill or asking about SKILL.md structure.",
+			"location": "~/.cursor/skills-cursor/create-skill/SKILL.md",
+			"summary": "Teaches how to author effective Cursor Agent Skills: SKILL.md structure, description writing, conciseness, and a 4-phase workflow.",
+			"descriptionIntro": "Lays out core principles for writing effective skills:",
+			"descriptionBullets": [
+				"Keep content concise since the context window is shared with conversation history and other skills",
+				"Keep SKILL.md under 500 lines for optimal performance",
+				"Use progressive disclosure, putting essentials in SKILL.md and details in separate reference files",
+				"Match the degree of freedom (text instructions, templates, or exact scripts) to how fragile the task is"
+			],
+			"howToUse": [
+				"Gathers requirements in a discovery phase — the skill's purpose, storage location, trigger scenarios, and any constraints or existing patterns — pausing for the user's answers as needed.",
+				"Designs the skill: drafts the name, writes a specific third-person description with trigger terms, and outlines needed sections and supporting files.",
+				"Implements the skill by creating the directory structure, writing SKILL.md with frontmatter, and adding any reference files or utility scripts.",
+				"Verifies the result against a checklist — length, description quality, consistent terminology, one-level-deep references, and discoverability."
+			],
+			"tags": [
+				"skills",
+				"skill-authoring",
+				"skill-md"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "create-rule",
+			"categoryId": "cursor-builtin",
+			"name": "create-rule",
+			"invocation": "auto",
+			"description": "Create Cursor rules for persistent AI guidance. Use when you want to create a rule, add coding standards, set up project conventions, configure file-specific patterns, create RULE.md files, or asks about .cursor/rules/ or AGENTS.md.",
+			"location": "~/.cursor/skills-cursor/create-rule/SKILL.md",
+			"summary": "Guides creating .mdc rules in .cursor/rules/, covering frontmatter scope/globs and keeping rules short and concrete.",
+			"descriptionIntro": "Recommends keeping rules concise, following a few best practices:",
+			"descriptionBullets": [
+				"Keep rules under 50 lines",
+				"Cover one concern per rule, splitting large rules into focused pieces",
+				"Write actionable guidance like clear internal docs",
+				"Include concrete examples of how to fix issues where possible"
+			],
+			"howToUse": [
+				"Gathers requirements on the rule's purpose, whether it should always apply or target specific files, and the glob patterns, pausing to ask the user when scope or patterns are unclear.",
+				"Creates a .mdc file in .cursor/rules/ with frontmatter (description, globs, alwaysApply) matching the chosen scope.",
+				"Writes the rule body concisely, under 50 lines, with concrete examples of the standard being enforced."
+			],
+			"tags": [
+				"cursor-rules",
+				"mdc",
+				"coding-standards"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "automate",
+			"categoryId": "cursor-builtin",
+			"name": "automate",
+			"invocation": "auto",
+			"description": "Use this skill to create Cursor Automations.",
+			"location": "~/.cursor/skills-cursor/automate/SKILL.md",
+			"summary": "Interactively drafts a new Cursor Automation (trigger, tools, prompt) under strict integration/MCP gates, then hands off to the editor.",
+			"descriptionIntro": "Follows a strict set of house rules while drafting an automation:",
+			"descriptionBullets": [
+				"Uses plain language only in chat, never showing MCP/tool/proto names or raw payloads unless asked",
+				"Builds and validates the YAML internally, only revealing it if the user explicitly asks",
+				"Never submits, opens a URL, or falls back automatically — the only finish path is a reviewed draft the user approves",
+				"Only prepares new automations; it does not list, inspect, or update existing ones from chat",
+				"Only references a repo file inline when the automation runs in that same repo and the file is actually committed there"
+			],
+			"howToUse": [
+				"Checks whether the in-app Automations editor handoff is available, stopping immediately if it isn't.",
+				"Captures the user's intent (trigger, action, outcome) and proactively runs integration discovery, sending one short question and pausing for the answer only if key details are still missing.",
+				"Works through completeness gates for trigger, tools, prompt, naming, and any Slack/Git/MCP-specific requirements.",
+				"Asks one consolidated question for anything integration discovery couldn't resolve, then pauses for the user's answer.",
+				"Shows a compact draft table for approval, then pauses; once approved and the user confirms they're ready, opens the Automations editor with the reviewed draft."
+			],
+			"tags": [
+				"automation",
+				"cursor-automations",
+				"triggers",
+				"workflow"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "sdk",
+			"categoryId": "cursor-builtin",
+			"name": "sdk",
+			"invocation": "auto",
+			"description": "Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor SDK - TypeScript (`@cursor/sdk`) or Python (`cursor-sdk` / `cursor_sdk`). Use when the user mentions integrating, installing, or writing code against the Cursor SDK; says `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `run.messages`, `CursorAgentError`, `@cursor/sdk`, `cursor-sdk`, or `cursor_sdk`; asks to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or other code outside the Cursor IDE; wants to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors; or is wiring Cursor into an automation, bot, or REST `/v1/agents` migration. Use eagerly rather than answering from memory; the SDK surface evolves and this skill is the source of truth for the external packages.",
+			"location": "~/.cursor/skills-cursor/sdk/SKILL.md",
+			"summary": "Guides building integrations on the Cursor SDK (TypeScript/Python): picking a language and invocation pattern, and avoiding five common pitfalls.",
+			"descriptionIntro": "Calls out five traps that catch almost every new SDK integration:",
+			"descriptionBullets": [
+				"Forgetting to explicitly set local vs cloud runtime, which silently defaults to local",
+				"Conflating a thrown CursorAgentError (run never executed) with a returned error status (run executed and failed)",
+				"Skipping disposal of the agent, which leaks child processes, databases, and memory",
+				"Skipping wait() even when not streaming, leaving you unable to tell if a run finished, errored, or was cancelled",
+				"Assuming every run operation (like cancel) is supported on every runtime instead of guarding with supports()"
+			],
+			"howToUse": [
+				"Determines which language variant (TypeScript or Python) to use based on what the user named, codebase signals, or by asking directly.",
+				"Picks the invocation pattern that fits the job: one-shot Agent.prompt, Agent.create plus agent.send for durable multi-turn/streaming use, or Agent.resume to continue an existing agent later.",
+				"Applies the fixes for the five common traps and the production best practices for unattended integrations."
+			],
+			"tags": [
+				"cursor-sdk",
+				"typescript",
+				"python",
+				"agents"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "review",
+			"categoryId": "cursor-builtin",
+			"name": "review",
+			"invocation": "manual",
+			"description": "Review code changes with the Bugbot or Security Review subagent.",
+			"location": "~/.cursor/skills-cursor/review/SKILL.md",
+			"summary": "Asks the user to pick Bugbot or Security Review, then delegates to the matching review skill.",
+			"howToUse": [
+				"Asks the user to choose between Bugbot and Security Review with a single-select question, pauses for their answer, then runs the corresponding review skill once."
+			],
+			"tags": [
+				"code-review",
+				"bugbot",
+				"security-review",
+				"router"
+			],
+			"interactive": true,
+			"dependsOn": [
+				"review-bugbot",
+				"review-security"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "review-bugbot",
+			"categoryId": "cursor-builtin",
+			"name": "review-bugbot",
+			"invocation": "auto",
+			"description": "Review code changes with Bugbot subagent.",
+			"location": "~/.cursor/skills-cursor/review-bugbot/SKILL.md",
+			"summary": "Runs a single readonly Bugbot subagent against branch or uncommitted changes and reports findings in a severity-sorted table.",
+			"howToUse": [
+				"Launches a single readonly Bugbot subagent against the repository's branch changes (or uncommitted changes if asked), letting it compute the diff itself.",
+				"If reviewing a specific PR or branch, checks that target out first, asking before stashing any local changes and pausing for confirmation if needed.",
+				"Retries once with a corrected invocation or a natural-language change description if the subagent fails or can't compute the diff, otherwise stops and reports the blocker.",
+				"Summarizes the findings in a severity-sorted markdown table (or reports no diff/no issues), without fixing anything unless asked."
+			],
+			"tags": [
+				"code-review",
+				"bugbot",
+				"subagent"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "review-security",
+			"categoryId": "cursor-builtin",
+			"name": "review-security",
+			"invocation": "auto",
+			"description": "Review code changes with Security Review subagent.",
+			"location": "~/.cursor/skills-cursor/review-security/SKILL.md",
+			"summary": "Runs a single readonly Security Review subagent against branch or uncommitted changes and reports findings in a severity-sorted table.",
+			"howToUse": [
+				"Launches a single readonly Security Review subagent against the repository's branch changes (or uncommitted changes if asked), letting it compute the diff itself.",
+				"If reviewing a specific PR or branch, checks that target out first, asking before stashing any local changes and pausing for confirmation if needed.",
+				"Retries once with the same prompt shape if the subagent fails, otherwise stops and reports the blocker.",
+				"Summarizes the findings in a severity-sorted markdown table (or reports no diff/no issues), without fixing anything unless asked."
+			],
+			"tags": [
+				"code-review",
+				"security-review",
+				"subagent"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "update-cursor-settings",
+			"categoryId": "cursor-builtin",
+			"name": "update-cursor-settings",
+			"invocation": "auto",
+			"description": "Modify Cursor/VSCode user settings in settings.json. Use when you want to change editor settings, preferences, configuration, themes, font size, tab size, format on save, auto save, keybindings, or any settings.json values.",
+			"location": "~/.cursor/skills-cursor/update-cursor-settings/SKILL.md",
+			"summary": "Reads, edits, and writes back Cursor/VSCode's settings.json to change editor, theme, or keybinding preferences safely.",
+			"descriptionIntro": "Follows three guardrails before touching settings.json:",
+			"descriptionBullets": [
+				"Reads the existing settings file first to understand current configuration",
+				"Preserves existing settings, only adding or modifying what was requested",
+				"Validates JSON syntax before writing, to avoid breaking the editor"
+			],
+			"howToUse": [
+				"Reads the current settings.json for the user's OS.",
+				"Parses the existing JSON content.",
+				"Adds or modifies only the requested setting(s), preserving everything else.",
+				"Writes the updated JSON back to the file.",
+				"Tells the user the setting was changed and whether a reload or restart is needed."
+			],
+			"tags": [
+				"cursor-settings",
+				"vscode",
+				"editor-config"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "update-cli-config",
+			"categoryId": "cursor-builtin",
+			"name": "update-cli-config",
+			"invocation": "auto",
+			"description": "View and modify Cursor CLI configuration settings in ~/.cursor/cli-config.json. Use when the user wants to change CLI settings, configure permissions, switch approval mode, enable vim mode, toggle display options, configure sandbox, or manage any CLI preferences.",
+			"location": "~/.cursor/skills-cursor/update-cli-config/SKILL.md",
+			"summary": "Reference for viewing and editing ~/.cursor/cli-config.json fields like permissions, sandbox, approvalMode, and display options.",
+			"howToUse": [
+				"Reads ~/.cursor/cli-config.json, applies the requested change to a documented field (permissions, editor, display, sandbox, approvalMode, etc.), and writes the JSON back, noting the CLI needs a restart to pick it up."
+			],
+			"tags": [
+				"cli-config",
+				"cursor-cli",
+				"permissions"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "split-to-prs",
+			"categoryId": "cursor-builtin",
+			"name": "split-to-prs",
+			"invocation": "auto",
+			"description": "Split current work into small reviewable PRs. Use when the user asks to split a chat, set of changes, branch, or PR.",
+			"location": "~/.cursor/skills-cursor/split-to-prs/SKILL.md",
+			"summary": "Plans and, after approval, executes splitting a pile of work into several small, reviewer-aligned PRs without destructive git ops.",
+			"descriptionIntro": "Follows hard rules to avoid losing or misrepresenting work while splitting:",
+			"descriptionBullets": [
+				"Never creates branches, commits, pushes, or opens PRs until the split plan is approved",
+				"Never discards user work or runs destructive git commands without explicit approval",
+				"Always saves a recoverable snapshot before moving any work around",
+				"Stages only named files or hunks, never a blanket git add"
+			],
+			"howToUse": [
+				"Compares the current work (committed and uncommitted) against the default branch and summarizes the natural slices, using ownership files to find reviewer boundaries.",
+				"Proposes a split plan — usually just PR titles, with a diagram for multiple slices — favoring independent PRs and stacking only when a dependency is real, then pauses for the user's approval.",
+				"Once approved, saves a recoverable snapshot, then creates a branch per slice, staging and committing only the planned files or hunks, and opens each PR.",
+				"Reports back the PR titles and URLs plus anything left on the original branch or working tree."
+			],
+			"tags": [
+				"git",
+				"pull-requests",
+				"pr-splitting"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "loop",
+			"categoryId": "cursor-builtin",
+			"name": "loop",
+			"invocation": "auto",
+			"description": "Run a prompt or skill in this session on a recurring or variable interval (e.g. /loop 5m /foo).",
+			"location": "~/.cursor/skills-cursor/loop/SKILL.md",
+			"summary": "Repeats a prompt or skill on a fixed interval or a self-paced dynamic schedule using background shell loops and wake sentinels.",
+			"howToUse": [
+				"Parses the /loop command for an optional interval and the prompt to repeat.",
+				"For a fixed interval, arms a background shell loop that sleeps and emits a sentinel on each tick, running the prompt immediately and again on every subsequent tick until stopped.",
+				"For no interval (dynamic mode), runs the prompt now, then self-paces by arming a time-based or event-based wake for the next run, re-arming after each wake.",
+				"Confirms the schedule and cadence to the user, and stops the loop when asked."
+			],
+			"tags": [
+				"loop",
+				"scheduling",
+				"automation"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "create-hook",
+			"categoryId": "cursor-builtin",
+			"name": "create-hook",
+			"invocation": "auto",
+			"description": "Create Cursor hooks. Use when you want to create a hook, write hooks.json, add hook scripts, or automate behavior around agent events.",
+			"location": "~/.cursor/skills-cursor/create-hook/SKILL.md",
+			"summary": "Guides creating hooks.json entries and scripts that observe, block, or modify agent/tab events via stdin/stdout JSON.",
+			"descriptionIntro": "Determines the hook's requirements before writing anything:",
+			"descriptionBullets": [
+				"Whether it should be a project hook or a user hook",
+				"Which event should trigger it",
+				"Whether it should audit, allow/deny, rewrite input, inject context, or continue a workflow",
+				"Whether it should be a command hook (script) or a prompt hook",
+				"Whether it needs a matcher to filter which tools, commands, or subagent types it runs for",
+				"Whether failures should fail open or fail closed"
+			],
+			"howToUse": [
+				"Gathers requirements on scope, trigger event, desired behavior, implementation type, filtering, and failure-safety, inferring from context where possible.",
+				"Picks the correct hooks.json location (project or user) and the narrowest matching event.",
+				"Creates or updates hooks.json, starting with no matcher or the simplest safe matcher.",
+				"Writes the hook script under the matching hooks directory to read stdin JSON and implement the behavior, returning only fields that event supports.",
+				"Makes the script executable and verifies any helper binaries it depends on are installed and on PATH.",
+				"Triggers the relevant action to test the hook and verifies its behavior in the Hooks settings tab or output channel."
+			],
+			"tags": [
+				"hooks",
+				"hooks-json",
+				"event-driven"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "babysit",
+			"categoryId": "cursor-builtin",
+			"name": "babysit",
+			"invocation": "auto",
+			"description": "Keep a PR merge-ready by triaging comments, resolving clear conflicts, and fixing CI in a loop.",
+			"location": "~/.cursor/skills-cursor/babysit/SKILL.md",
+			"summary": "Loops on a PR — resolving merge conflicts, triaging comments/Bugbot, and fixing in-scope CI failures — until it's merge-ready.",
+			"descriptionIntro": "Works through three areas to get a PR merge-ready:",
+			"descriptionBullets": [
+				"Intelligently resolves merge conflicts while preserving both branches' intent, aborting and asking if intents truly conflict",
+				"Reviews active unresolved comments including Bugbot findings and resolves valid change requests or bug reports",
+				"Fixes CI issues caused by changes within the PR's scope, checking for a stale base branch before assuming an unrelated failure needs a real fix"
+			],
+			"howToUse": [
+				"Checks the PR's status, comments, and CI, then loops through resolving mergeable conflicts, triaging valid comments and Bugbot findings, and pushing scoped CI fixes until the PR is mergeable and green."
+			],
+			"tags": [
+				"pull-requests",
+				"ci",
+				"pr-triage"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "using-git-worktrees",
+			"categoryId": "plugins",
+			"name": "using-git-worktrees",
+			"invocation": "auto",
+			"description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart directory selection and safety verification",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/using-git-worktrees/SKILL.md",
+			"summary": "Creates an isolated git worktree for feature work, picking a safe directory and verifying a clean test baseline before work begins.",
+			"descriptionIntro": "The skill follows a directory-selection and safety-verification process before creating the worktree.",
+			"descriptionBullets": [
+				"Picks the worktree directory using a priority order: existing .worktrees or worktrees folder, then CLAUDE.md preference, then asks the user",
+				"Verifies a chosen project-local directory is gitignored before creating the worktree, adding it to .gitignore and committing if not",
+				"Creates the worktree and branch, then auto-detects and runs project setup (npm install, cargo build, pip install, poetry install, go mod download)",
+				"Runs the project's test suite to verify a clean baseline, reporting failures and asking whether to proceed",
+				"Reports the final worktree path and readiness status"
+			],
+			"howToUse": [
+				"Check for an existing .worktrees or worktrees directory and use it if found, preferring .worktrees if both exist",
+				"If neither exists, check CLAUDE.md for a stated preference, otherwise asks the user to choose between a project-local or global worktree location",
+				"For project-local directories, verify the directory is git-ignored, adding it to .gitignore and committing if it isn't",
+				"Detect the project name and create the git worktree with a new branch, then change into it",
+				"Auto-detect the project type and run the appropriate dependency install or build command",
+				"Run the test suite to verify a clean baseline, reporting failures and pausing for the user's approval on whether to proceed",
+				"Report the worktree's location and test status back to the user"
+			],
+			"tags": [
+				"git",
+				"worktrees",
+				"isolation",
+				"workspace-setup",
+				"safety-checks"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "test-driven-development",
+			"categoryId": "plugins",
+			"name": "test-driven-development",
+			"invocation": "auto",
+			"description": "Use when implementing any feature or bugfix, before writing implementation code",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/test-driven-development/SKILL.md",
+			"summary": "Enforces strict red-green-refactor TDD: write a failing test, watch it fail correctly, write minimal code to pass, then refactor.",
+			"howToUse": [
+				"Write one minimal failing test that names and demonstrates the desired behavior",
+				"Run the test and confirm it fails for the expected reason, not from a typo or setup error",
+				"Write the simplest implementation code that makes the test pass, without adding extra features",
+				"Run the tests again and confirm the new test and all existing tests pass with clean output",
+				"Refactor the code to remove duplication and improve clarity while keeping tests green",
+				"Repeat the cycle for the next behavior, and write a failing test to reproduce any bug before fixing it"
+			],
+			"tags": [
+				"tdd",
+				"testing",
+				"red-green-refactor",
+				"workflow-discipline"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "systematic-debugging",
+			"categoryId": "plugins",
+			"name": "systematic-debugging",
+			"invocation": "auto",
+			"description": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/systematic-debugging/SKILL.md",
+			"summary": "Forces root-cause investigation through four ordered phases before any bug fix may be attempted.",
+			"descriptionIntro": "The skill defines four mandatory phases that must be completed in order before any fix is proposed.",
+			"descriptionBullets": [
+				"Phase 1 Root Cause Investigation: read error messages fully, reproduce the issue consistently, check recent changes, gather diagnostic evidence across component boundaries in multi-component systems, and trace data flow backward to its source",
+				"Phase 2 Pattern Analysis: find working examples similar to the broken code, compare against reference implementations, identify every difference, and understand dependencies",
+				"Phase 3 Hypothesis and Testing: form a single specific hypothesis, test it with the smallest possible change, and verify before continuing or forming a new hypothesis",
+				"Phase 4 Implementation: create a failing test case, implement a single fix for the root cause, verify it, and if three or more fixes fail, stop and question the underlying architecture instead of continuing to patch"
+			],
+			"howToUse": [
+				"Read error messages and stack traces completely rather than skipping past them",
+				"Reproduce the issue consistently and check recent changes such as git diff, new dependencies, or config that could have caused it",
+				"For multi-component systems, add diagnostic instrumentation at each boundary to find where the failure actually occurs",
+				"Trace data flow backward from the error to find its origin rather than fixing at the symptom",
+				"Find working examples in the codebase and compare them against the broken code to identify every difference",
+				"Form a single, specific hypothesis about the root cause and test it with the smallest possible change",
+				"If the hypothesis doesn't hold, form a new one rather than layering more fixes on top",
+				"Create a failing test that reproduces the bug before implementing any fix",
+				"Implement one fix addressing the root cause, then verify it resolves the issue without breaking other tests",
+				"If three or more fixes have failed, stop and discuss whether the underlying architecture is wrong instead of attempting another fix"
+			],
+			"tags": [
+				"debugging",
+				"root-cause-analysis",
+				"testing",
+				"workflow-discipline"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "using-superpowers",
+			"categoryId": "plugins",
+			"name": "using-superpowers",
+			"invocation": "auto",
+			"description": "Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/using-superpowers/SKILL.md",
+			"summary": "Meta-rule requiring any potentially-applicable skill to be invoked before responding, and defining skill priority, types, and instruction precedence.",
+			"descriptionIntro": "The skill sets several rules governing when and how skills must be invoked.",
+			"descriptionBullets": [
+				"Requires invoking a skill whenever there's even a 1% chance it applies, before responding or acting, including before asking clarifying questions",
+				"Establishes instruction priority: explicit user instructions (CLAUDE.md/GEMINI.md/AGENTS.md/direct requests) outrank superpowers skills, which outrank default system behavior",
+				"Documents how skills are accessed across platforms: the Skill tool in Claude Code, the skill tool in Copilot CLI, and activate_skill in Gemini CLI",
+				"Orders skill priority so process skills like brainstorming and debugging are invoked before implementation skills",
+				"Classifies skills as rigid, meaning follow exactly (e.g. TDD, debugging), or flexible, meaning adapt principles to context (e.g. patterns)",
+				"Lists rationalization red flags, such as 'this is just a simple question,' that signal the agent is wrongly skipping a skill check"
+			],
+			"howToUse": [
+				"Before responding to or acting on any message, check whether any skill might apply, even a small chance, and invoke it before proceeding, including before asking clarifying questions"
+			],
+			"tags": [
+				"meta-skill",
+				"skill-discovery",
+				"workflow-discipline",
+				"orchestration"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "dispatching-parallel-agents",
+			"categoryId": "plugins",
+			"name": "dispatching-parallel-agents",
+			"invocation": "auto",
+			"description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/dispatching-parallel-agents/SKILL.md",
+			"summary": "Guides dispatching one focused subagent per independent problem domain so unrelated failures or tasks are handled concurrently.",
+			"descriptionIntro": "The skill lays out a pattern for splitting and dispatching independent work to parallel agents.",
+			"descriptionBullets": [
+				"Groups failures or tasks by independent problem domain so unrelated issues aren't investigated together",
+				"Crafts each agent prompt to be focused, self-contained, and explicit about constraints and expected output format",
+				"Dispatches all independent agents concurrently rather than sequentially",
+				"Reviews each returned summary, checks for conflicts between agents' changes, and runs the full test suite to verify integration"
+			],
+			"howToUse": [
+				"Identify independent problem domains by grouping failures or tasks by the subsystem or file they affect",
+				"Write a focused, self-contained prompt for each agent specifying its scope, goal, constraints, and expected output",
+				"Dispatch all the agents in parallel rather than one at a time",
+				"Review each agent's summary, check whether any changes conflict, and run the full test suite to confirm everything works together"
+			],
+			"tags": [
+				"subagents",
+				"parallelization",
+				"task-delegation",
+				"debugging"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "executing-plans",
+			"categoryId": "plugins",
+			"name": "executing-plans",
+			"invocation": "auto",
+			"description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/executing-plans/SKILL.md",
+			"summary": "Loads a written implementation plan, reviews it critically, executes every task with verification, then hands off to branch completion.",
+			"howToUse": [
+				"Read the plan file and review it critically, raising any concerns with the user before starting, then pauses for their input if there are concerns, otherwise creates a TodoWrite list",
+				"For each task, mark it in progress, follow its steps exactly, run the specified verifications, and mark it completed",
+				"After all tasks are complete and verified, invoke the finishing-a-development-branch skill to wrap up the work",
+				"Stop and ask for clarification immediately if blocked by a missing dependency, failing test, or unclear instruction, rather than guessing"
+			],
+			"tags": [
+				"implementation-plans",
+				"execution",
+				"workflow",
+				"todo-tracking"
+			],
+			"interactive": true,
+			"dependsOn": [
+				"finishing-a-development-branch"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "finishing-a-development-branch",
+			"categoryId": "plugins",
+			"name": "finishing-a-development-branch",
+			"invocation": "auto",
+			"description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/finishing-a-development-branch/SKILL.md",
+			"summary": "Verifies tests pass, then presents exactly four completion options (merge, PR, keep, discard) and executes the chosen one with matching cleanup.",
+			"descriptionIntro": "The skill runs a fixed sequence to safely wrap up finished work.",
+			"descriptionBullets": [
+				"Runs the project's test suite first and refuses to proceed if any tests fail",
+				"Determines the base branch the feature branch split from",
+				"Presents exactly four completion options: merge locally, push and create a pull request, keep the branch as-is, or discard the work",
+				"Executes the chosen option, requiring typed confirmation before discarding any work",
+				"Cleans up the git worktree afterward for the merge and discard options, but preserves it for the keep-as-is and PR options"
+			],
+			"howToUse": [
+				"Run the project's test suite and stop if anything fails, reporting the failures instead of proceeding",
+				"Determine the base branch the feature branch diverged from",
+				"Present exactly four options to the user (merge locally, create a PR, keep as-is, discard), then pauses for their choice",
+				"Execute the chosen option: merge and delete the branch, push and open a PR, leave the branch alone, or delete the branch after requiring a typed 'discard' confirmation, pausing for that confirmation",
+				"Remove the git worktree afterward if the option was merge or discard, keeping it for the other two options"
+			],
+			"tags": [
+				"git",
+				"pull-requests",
+				"branch-cleanup",
+				"workflow"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "brainstorming",
+			"categoryId": "plugins",
+			"name": "brainstorming",
+			"invocation": "auto",
+			"description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/brainstorming/SKILL.md",
+			"summary": "Turns a rough idea into an approved, written design spec through iterative one-question-at-a-time dialogue before any implementation begins.",
+			"descriptionIntro": "The skill follows a nine-step checklist from context exploration through handoff to planning.",
+			"descriptionBullets": [
+				"Explores the current project context (files, docs, recent commits) before asking questions",
+				"Optionally offers a browser-based visual companion, as its own message, for mockups and diagrams",
+				"Asks clarifying questions one at a time, preferring multiple choice, to understand purpose, constraints, and success criteria",
+				"Proposes 2-3 approaches with trade-offs and a recommendation before presenting a design",
+				"Presents the design in sections scaled to their complexity, getting approval after each section",
+				"Writes the approved design to a dated spec file in docs/superpowers/specs and commits it",
+				"Self-reviews the spec for placeholders, contradictions, ambiguity, and scope before handing it to the user",
+				"Has the user review the written spec file before proceeding",
+				"Hands off to the writing-plans skill as the only next step, never invoking an implementation skill directly"
+			],
+			"howToUse": [
+				"Explore the current project's files, docs, and recent commits to understand context",
+				"If upcoming questions will be visual, offer a browser-based visual companion as its own standalone message, then pauses for the user's response",
+				"Ask clarifying questions one at a time, preferring multiple choice, then pauses for the user's answer each time",
+				"Propose 2-3 approaches with trade-offs and a recommended option",
+				"Present the design in scaled sections, pausing for approval after each section",
+				"Write the approved design to a dated spec file under docs/superpowers/specs and commit it",
+				"Self-review the spec for placeholders, contradictions, ambiguity, and scope, fixing issues inline",
+				"Ask the user to review the written spec file, then pauses for their approval or requested changes",
+				"Invoke the writing-plans skill once the spec is approved, as the sole next step"
+			],
+			"tags": [
+				"design",
+				"requirements-gathering",
+				"planning",
+				"spec-writing"
+			],
+			"interactive": true,
+			"dependsOn": [
+				"writing-plans"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "writing-plans",
+			"categoryId": "plugins",
+			"name": "writing-plans",
+			"invocation": "auto",
+			"description": "Use when you have a spec or requirements for a multi-step task, before touching code",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/writing-plans/SKILL.md",
+			"summary": "Converts an approved spec into a detailed, placeholder-free implementation plan of bite-sized TDD tasks with exact file paths and code.",
+			"descriptionIntro": "The skill defines a structured process for turning a spec into a rigorous plan document.",
+			"descriptionBullets": [
+				"Checks the spec's scope and suggests splitting it into separate plans if it covers multiple independent subsystems",
+				"Maps out file structure first, deciding what will be created or modified and each file's single responsibility",
+				"Breaks work into bite-sized 2-5 minute steps (write test, verify fail, implement, verify pass, commit) following DRY, YAGNI, and TDD",
+				"Requires a standard plan header naming the required execution sub-skill, goal, architecture, and tech stack",
+				"Forbids placeholders like 'TBD', 'add appropriate error handling', or references to undefined types or functions",
+				"Self-reviews the finished plan against the spec for coverage gaps, placeholders, and type/naming consistency before finalizing",
+				"Offers the user a choice between subagent-driven or inline plan execution after saving"
+			],
+			"howToUse": [
+				"Check whether the spec covers multiple independent subsystems and suggest splitting into separate plans if so",
+				"Map out which files will be created or modified and what each one is responsible for before defining tasks",
+				"Write the plan with the required header, then break each task into bite-sized steps with exact file paths, complete code, and exact commands",
+				"Avoid any placeholders, vague instructions, or undefined references, ensuring every step is fully spelled out",
+				"Self-review the finished plan against the spec for coverage, placeholders, and type consistency, fixing issues inline",
+				"Save the plan to docs/superpowers/plans and offer the user a choice between subagent-driven or inline execution, then pauses for their choice"
+			],
+			"tags": [
+				"planning",
+				"implementation-plan",
+				"tdd",
+				"documentation"
+			],
+			"interactive": true,
+			"dependsOn": [
+				"subagent-driven-development",
+				"executing-plans"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "requesting-code-review",
+			"categoryId": "plugins",
+			"name": "requesting-code-review",
+			"invocation": "auto",
+			"description": "Use when completing tasks, implementing major features, or before merging to verify work meets requirements",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/requesting-code-review/SKILL.md",
+			"summary": "Dispatches a code-reviewer subagent with precisely crafted context (git SHAs, requirements) to review completed work, then acts on its feedback.",
+			"howToUse": [
+				"Get the base and head git SHAs for the change being reviewed",
+				"Dispatch a code-reviewer subagent using the template, filling in what was implemented, the requirements, and the SHAs",
+				"Fix Critical issues immediately, fix Important issues before proceeding, note Minor issues for later, and push back with technical reasoning if the reviewer seems wrong"
+			],
+			"tags": [
+				"code-review",
+				"subagents",
+				"quality-assurance",
+				"workflow"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "receiving-code-review",
+			"categoryId": "plugins",
+			"name": "receiving-code-review",
+			"invocation": "auto",
+			"description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/receiving-code-review/SKILL.md",
+			"summary": "Requires verifying and technically evaluating code review feedback before implementing it, forbidding performative agreement and enabling reasoned pushback.",
+			"descriptionIntro": "The skill defines a six-step response pattern plus source-specific handling rules for incoming feedback.",
+			"descriptionBullets": [
+				"Follows a fixed response pattern: read fully, restate the requirement, verify against the codebase, evaluate technical soundness, respond, then implement one item at a time",
+				"Forbids performative responses like 'You're absolutely right!' or implementing before verification",
+				"Requires stopping to ask for clarification on any unclear item rather than implementing only the clear ones",
+				"Applies different trust levels depending on source: trusted for the human partner, but skeptically verified for external reviewers across a checklist",
+				"Applies a YAGNI check when a reviewer suggests 'implementing properly' by grepping for actual usage first",
+				"Orders implementation of multi-item feedback as blocking issues, then simple fixes, then complex fixes, testing each individually",
+				"Requires technical reasoning rather than defensiveness when pushing back, and a factual correction with no apology when the pushback turns out wrong",
+				"Requires replying to inline GitHub review comments in their own thread rather than as a top-level comment"
+			],
+			"howToUse": [
+				"Read the complete feedback without reacting",
+				"Restate the requirement in your own words or ask for clarification if anything is unclear, then pauses until all unclear items are resolved",
+				"Verify the feedback against the actual codebase before agreeing with it",
+				"Evaluate whether the suggestion is technically sound for this specific codebase",
+				"Respond with a technical acknowledgment or a reasoned pushback, never performative agreement or gratitude",
+				"Implement accepted items one at a time, in order of blocking issues then simple fixes then complex fixes, testing each individually"
+			],
+			"tags": [
+				"code-review",
+				"technical-rigor",
+				"communication",
+				"workflow-discipline"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "writing-skills",
+			"categoryId": "plugins",
+			"name": "writing-skills",
+			"invocation": "auto",
+			"description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/writing-skills/SKILL.md",
+			"summary": "Applies TDD discipline to authoring SKILL.md files: run baseline pressure tests without the skill, write the minimal skill to fix the failures, then close loopholes.",
+			"descriptionIntro": "The skill maps the TDD cycle onto skill creation and lays out structure, discoverability, and testing requirements.",
+			"descriptionBullets": [
+				"Maps TDD concepts onto skill creation: pressure scenarios are test cases, the SKILL.md is production code, baseline agent violations are RED, and compliance is GREEN",
+				"Defines skill types (technique, pattern, reference) and when to create a skill versus when not to",
+				"Specifies required SKILL.md structure: YAML frontmatter with name and description under 1024 characters, description starting with 'Use when...' describing only triggering conditions and never the workflow",
+				"Gives Claude Search Optimization guidance for descriptions, keyword coverage, naming, and token efficiency so skills are discoverable and cheap to load",
+				"Requires cross-referencing other skills by name with REQUIRED SUB-SKILL or REQUIRED BACKGROUND markers instead of force-loading @ links",
+				"Restricts flowcharts to non-obvious decision points, never for reference material or linear instructions",
+				"Requires testing every skill type (discipline-enforcing, technique, pattern, reference) with appropriate pressure or application scenarios before deployment",
+				"Provides a full RED-GREEN-REFACTOR checklist and anti-patterns (narrative examples, multi-language dilution, code in flowcharts, generic labels) to avoid"
+			],
+			"howToUse": [
+				"Run pressure scenarios with a subagent without the skill present and document the baseline rationalizations and failures verbatim",
+				"Write a minimal SKILL.md addressing those specific baseline failures, following the required frontmatter and structure conventions",
+				"Re-run the same scenarios with the skill present and verify the agent now complies",
+				"Identify any new rationalizations the agent finds, add explicit counters and a red-flags list, and re-test until bulletproof",
+				"Commit the finished skill to git, fully testing and deploying each skill before starting the next one"
+			],
+			"tags": [
+				"skill-authoring",
+				"tdd",
+				"documentation",
+				"meta-skill"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "verification-before-completion",
+			"categoryId": "plugins",
+			"name": "verification-before-completion",
+			"invocation": "auto",
+			"description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/verification-before-completion/SKILL.md",
+			"summary": "Forbids any claim of completion, success, or passing tests without first running the actual verification command and reading its full output.",
+			"descriptionIntro": "The skill defines a gate function that must run before any completion or success claim.",
+			"descriptionBullets": [
+				"Requires identifying the exact command that proves a claim, running it fresh and in full, reading the complete output, and only then making the claim",
+				"Lists common claims (tests pass, linter clean, build succeeds, bug fixed, regression test works, agent completed, requirements met) with what evidence each actually requires",
+				"Flags wording like 'should', 'probably', or expressions of satisfaction made before verification as red flags to stop on",
+				"Requires independently verifying subagent or delegated-agent success reports via the actual version-control diff rather than trusting the report",
+				"Requires a red-green cycle (revert the fix, confirm the test now fails, restore the fix) to prove a regression test actually catches the bug"
+			],
+			"howToUse": [
+				"Identify which command actually proves the claim being made",
+				"Run that full command fresh, not relying on a previous run or partial check",
+				"Read the complete output, checking the exit code and counting failures",
+				"Only state the claim once the output confirms it, citing the evidence, otherwise state the actual status",
+				"For regression tests, verify with a red-green cycle: confirm the test passes, revert the fix and confirm it fails, then restore the fix",
+				"For delegated agents, verify their reported success against the actual version-control diff rather than trusting the report"
+			],
+			"tags": [
+				"verification",
+				"testing",
+				"honesty",
+				"workflow-discipline"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "subagent-driven-development",
+			"categoryId": "plugins",
+			"name": "subagent-driven-development",
+			"invocation": "auto",
+			"description": "Use when executing implementation plans with independent tasks in the current session",
+			"location": "~/.cursor/plugins/cache/cursor-public/superpowers/b7a8f76985f1e93e75dd2f2a3b424dc731bd9d37/skills/subagent-driven-development/SKILL.md",
+			"summary": "Executes an implementation plan by dispatching a fresh subagent per task, followed by a two-stage spec-compliance then code-quality review before moving on.",
+			"descriptionIntro": "The skill runs a repeating per-task cycle of implementation, questions, and two-stage review.",
+			"descriptionBullets": [
+				"Reads the full plan once, extracts every task's full text and context, and creates a TodoWrite entry per task before dispatching any subagent",
+				"Dispatches one implementer subagent per task, answering any questions it raises before letting it implement, test, commit, and self-review",
+				"Runs a mandatory two-stage review after each task: a spec-compliance reviewer first, then a code-quality reviewer, looping fixes back to the implementer until both approve",
+				"Selects model capability by task complexity: cheap models for mechanical single-file tasks, standard models for multi-file integration, and the most capable model for architecture or design judgment",
+				"Handles four implementer statuses (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED) with different escalation paths, never letting a blocked subagent silently retry unchanged",
+				"Dispatches a final code reviewer across the entire implementation after all tasks complete, then hands off to finishing-a-development-branch"
+			],
+			"howToUse": [
+				"Read the plan once, extract every task's full text and context, and create a TodoWrite list covering all tasks",
+				"Dispatch a fresh implementer subagent for each task with its full text and context, then pauses to answer any clarifying questions before it proceeds",
+				"Let the implementer subagent implement, test, commit, and self-review the task",
+				"Dispatch a spec-compliance reviewer subagent, looping implementer fixes back through re-review until it approves",
+				"Dispatch a code-quality reviewer subagent only after spec compliance passes, looping fixes back through re-review until it approves",
+				"Mark the task complete and repeat for the remaining tasks",
+				"After all tasks are done, dispatch a final code reviewer for the entire implementation, then invoke finishing-a-development-branch"
+			],
+			"tags": [
+				"subagents",
+				"implementation-plans",
+				"code-review",
+				"tdd",
+				"workflow"
+			],
+			"interactive": true,
+			"dependsOn": [
+				"finishing-a-development-branch"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "enable-custom-dashboard-usage",
+			"categoryId": "frontend",
+			"name": "enable-custom-dashboard-usage",
+			"invocation": "auto",
+			"description": "Ensures new or refactored Saporo frontend UI components are dashboard-ready by construction — self-sufficient via props with store defaults, scope passed as a prop rather than read from a global store, callback props instead of store writes/navigation, real API-backed data, and narrow-width safe layout — per the SPR-4648 guidelines, and optionally registers the component in the custom dashboard's WIDGET_REGISTRY so it's usable as a widget today. Use proactively whenever building or refactoring a non-trivial UI component/section/card, even if the user never says \"widget\" or \"dashboard\" — most page-level components are candidates for the custom dashboard system, and it's far cheaper to build them dashboard-ready than to retrofit later. Also trigger immediately whenever the user mentions a widget, dashboard, or reusable component.",
+			"location": "frontend/.cursor/skills/enable-custom-dashboard-usage/SKILL.md",
+			"summary": "Confirms with the user, then walks new/refactored UI components through a dashboard-readiness checklist and optionally registers them as widgets.",
+			"descriptionIntro": "Before registering a component as a dashboard widget, the skill works through a readiness checklist covering:",
+			"descriptionBullets": [
+				"leaf/presentational components have zero store dependencies and fully typed props",
+				"section-level wrapper components accept props with store defaults as an escape hatch instead of hard store reads",
+				"no hard dependency on the global scopeSelection singleton — scope is accepted as a plain prop",
+				"callback props are used instead of direct store writes or imperative side effects like window.scrollTo",
+				"no dummy/fixture data — widgets must be backed by real API calls",
+				"no imperative route navigation — an onNavigate callback or plain link is used instead",
+				"layout stays safe at narrow dashboard grid widths",
+				"new widget categories are added consistently in both required locations"
+			],
+			"howToUse": [
+				"Before doing anything, ask the user whether they want the component prepped for the custom dashboard system, since the trigger conditions deliberately over-fire, and skip entirely if they decline or the component is admin-only, preference-driven, or explicitly scoped to a single page.",
+				"Decide whether the component will be a self-fetching unwrapped widget or a thin wrapper around an existing section component.",
+				"Work through the readiness checklist, converting store reads to props with store defaults, replacing store writes/navigation with callback props, removing dummy data, and ensuring narrow-width layout safety.",
+				"Watch for red flags like deep structural coupling or page-shaped components that are a poor fit, and surface those to the user instead of forcing them through the checklist.",
+				"Optionally register the component in WIDGET_REGISTRY if the user opted into that during the initial confirmation.",
+				"Verify with svelte-check, and confirm the widget renders correctly at its default and minimum sizes if registered."
+			],
+			"tags": [
+				"dashboard",
+				"widget",
+				"svelte",
+				"component-design",
+				"props"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "svelte5-reactivity-fix",
+			"categoryId": "frontend",
+			"name": "svelte5-reactivity-fix",
+			"invocation": "auto",
+			"description": "Diagnoses and fixes Svelte 5 runes reactivity issues in this codebase: \"This reference only captures the initial value of X\" (state_referenced_locally) warnings, $effect used for derived values, effect_update_depth_exceeded loops, binding_property_non_reactive, derived_inert, and prop->local-state $effect.pre sync bugs. Use when the user pastes a Svelte warning/error or asks to fix reactivity, $effect, $derived, or binding problems.",
+			"location": "frontend/.cursor/skills/svelte5-reactivity-fix/SKILL.md",
+			"summary": "Maps common Svelte 5 runes warnings and bugs to their root cause and the declarative fix to apply.",
+			"descriptionIntro": "It maps common Svelte 5 reactivity symptoms to their root cause and fix, covering:",
+			"descriptionBullets": [
+				"state_referenced_locally warnings from state/props captured once instead of deriving",
+				"$effect blocks used to compute derived values instead of $derived",
+				"effect_update_depth_exceeded infinite-update loops",
+				"binding_property_non_reactive and ownership_invalid_binding binding errors",
+				"derived_inert values read after their owning effect is destroyed",
+				"prop-to-local-state sync effects that revert user input on every keystroke",
+				"duplicate API calls caused by effects that read state while triggering async calls"
+			],
+			"howToUse": [
+				"Diagnose the specific warning or symptom using the quick lookup table mapping it to its cause and fix.",
+				"Apply the declarative fix: replace effects that compute values with $derived, defer locally-captured reads into a derived or closure, guard or eliminate prop-to-local-state sync effects, and use tick() instead of timers.",
+				"For a bulk warning sweep after a Svelte version bump, run svelte-check, group the warnings by file, and apply the fixes until the count drops to zero."
+			],
+			"tags": [
+				"svelte5",
+				"reactivity",
+				"runes",
+				"effect",
+				"derived"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "pr-summary",
+			"categoryId": "frontend",
+			"name": "pr-summary",
+			"invocation": "auto",
+			"description": "Generates a pull request description/summary by analyzing the current branch's diff against the base branch, formatted per the project's pr-summary-format rule (GitHub/Linear-friendly markdown in a copy-paste code fence). Use when the user asks for a PR summary, PR description, write-up, or a short summary for GitHub / Linear, or a commit message.",
+			"location": "frontend/.cursor/skills/pr-summary/SKILL.md",
+			"summary": "Builds a PR description or commit message from the branch's diff, formatted as a copy-pasteable markdown fence.",
+			"descriptionIntro": "It follows a few style preferences baked in from the user's repeated feedback:",
+			"descriptionBullets": [
+				"keeps summaries short by default, expanding only if asked",
+				"leads with the PR's main goal even when most of the diff is supporting refactor work",
+				"stays accurate about scope (e.g. who can do what) by verifying against the code rather than overstating",
+				"adapts output format on request (GitHub, Linear, HTML, or no formatting)",
+				"can also produce a short commit message with an imperative subject and optional body"
+			],
+			"howToUse": [
+				"Gather all commits and the full diff on the current branch against the base branch (usually develop), plus anything the user mentions doing manually.",
+				"Write the summary wrapped in a markdown code fence following the mandatory PR summary format, using the Summary/Changes/Test plan template by default.",
+				"Adjust length and format for variants like a short summary, one-line summary, full write-up, or commit message, based on what the user asked for."
+			],
+			"tags": [
+				"pull-request",
+				"git",
+				"summary",
+				"markdown"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "stacked-pr-review-loop",
+			"categoryId": "frontend",
+			"name": "stacked-pr-review-loop",
+			"invocation": "auto",
+			"description": "Triage AI-reviewer (Cursor Bugbot / Devin / CodeRabbit) comments across a stack of dependent PRs, fix the findings bottom-up, and cascade-rebase the stack cleanly. Use when a feature was split into stacked PRs and the user asks to check / pull / triage / address review-bot comments across several PRs, fix the bugs, or rebase the stack after editing a base branch.",
+			"location": "frontend/.cursor/skills/stacked-pr-review-loop/SKILL.md",
+			"summary": "Pulls AI-reviewer comments across a stacked PR chain, fixes them bottom-up, and cascade-rebases the stack.",
+			"howToUse": [
+				"Optionally set git config so cascade rebasing with --update-refs becomes the default for every rebase.",
+				"Pull every AI reviewer comment across the whole PR stack before touching any code, using the provided script.",
+				"Triage findings by recurring theme rather than by PR, deciding which branch should own each fix.",
+				"Fix issues bottom-up, starting from the base branch and working upward through the stack.",
+				"Cascade-rebase the stack in one command from the top branch, then push all branches at once.",
+				"Verify with both vitest and svelte-check after every conflict resolution.",
+				"Push the changes, then reply to any false-positive bot comments and re-pull comments once the new review runs finish."
+			],
+			"tags": [
+				"pull-requests",
+				"code-review",
+				"git-rebase",
+				"bugbot",
+				"stacked-prs"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "self-code-review",
+			"categoryId": "frontend",
+			"name": "self-code-review",
+			"invocation": "auto",
+			"description": "Performs a thorough Devin/Codex-style pre-handoff code review of the current branch's changes for this Svelte 5 + TypeScript frontend. Use when the user asks for a code review, a \"Devin-style\" or \"Codex-style\" review, to check touched files for rule violations, or to find issues before opening/handing off a PR.",
+			"location": "frontend/.cursor/skills/self-code-review/SKILL.md",
+			"summary": "Runs a Devin/Codex-style pre-handoff review of the branch's changes against project rules and known bug patterns.",
+			"descriptionIntro": "It checks every touched file against the project's rule and bug-pattern checklists, catching issues like:",
+			"descriptionBullets": [
+				"any types, missing typed props/interfaces, and other Frontend-rules.mdc violations",
+				"$effect used for derived computations or for syncing props into local state (causing reverted user input)",
+				"hardcoded color classes and unthemed form inputs",
+				"fire-and-forget async calls, stale closures, and race conditions",
+				"duplicate API calls, missing permission guards, and dead code left over from refactors",
+				"DataTable column field collisions and other project-specific gotchas"
+			],
+			"howToUse": [
+				"Determine the scope of changed files against the base branch (usually develop).",
+				"Read each changed file in full, not just the diff hunks.",
+				"Run the project-rule and bug-pattern checklists against every touched file.",
+				"Report findings grouped by severity (critical, suggestion, nice-to-have) with file and line references.",
+				"Ask before fixing anything, unless the user already asked for fixes."
+			],
+			"tags": [
+				"code-review",
+				"svelte5",
+				"typescript",
+				"quality"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "datatable-migration",
+			"categoryId": "frontend",
+			"name": "datatable-migration",
+			"invocation": "auto",
+			"description": "Playbook for converting a Tabulator-based table (TabulatorTable.svelte) to the project's DataTable stack, following prior refactors (NodesTable, InventoryTable, LogsTable, TicketsTable). Use when the user asks to replace Tabulator with DataTable, refactor a *Table.svelte to the data-table stack, or add a new table using DataTable.",
+			"location": "frontend/.cursor/skills/datatable-migration/SKILL.md",
+			"summary": "Step-by-step playbook for converting a Tabulator table to the project's DataTable stack.",
+			"descriptionIntro": "Beyond the migration steps, it encodes project-specific gotchas to avoid, including:",
+			"descriptionBullets": [
+				"giving every column a unique field so saved column widths/visibility don't collide",
+				"using a stable derived params object instead of an inline literal to avoid refetch loops",
+				"handling POST endpoints that need both a body and querystring via a dedicated prop",
+				"keeping cell rendering logic in formatter components rather than imperative props",
+				"not changing a table's tableId casually, since it keys persisted column preferences"
+			],
+			"howToUse": [
+				"Inventory the existing Tabulator table's columns, formatters, sort params, request shape, filters, selection, and actions.",
+				"Create a columns.svelte.ts file with the DataTableColumn config, mapping each Tabulator formatter to a table-cell component or formatter name.",
+				"Wire up DataTable with the url, method, responseObject, and params, adding a transformResponse only if the API response shape differs.",
+				"Match sort params to the API's expected sort format.",
+				"Add a toolbar with ColumnSelector and ResetColumnsBtn via useColumnWidth, gated on the relevant permission.",
+				"Port column filters to filterConfig using the table-filters components.",
+				"Delete legacy Tabulator wrapper state that DataTable now handles internally.",
+				"Test every consumer of the table, since it's often reused across sliders, pages, and widgets.",
+				"Run the self-code-review skill before finishing."
+			],
+			"tags": [
+				"datatable",
+				"svelte",
+				"migration",
+				"tables"
+			],
+			"interactive": false,
+			"dependsOn": [
+				"self-code-review"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "saporo-licenser-frontend",
+			"categoryId": "frontend",
+			"name": "saporo-licenser",
+			"invocation": "auto",
+			"description": "Generates signed Saporo on-prem license files (JWT) via the internal Go CLI in devops/licenser. Use when the user asks for a new license, license.txt, licenser, AD/Azure tier flags, or inspecting an existing license token.",
+			"location": "frontend/.cursor/skills/saporo-licenser/SKILL.md",
+			"note": "An independent, slightly diverged copy of the same skill (its cd instructions account for a workspace containing only the frontend repo) — not the shared, symlinked on-prem/plugins copy at categoryId on-prem.",
+			"summary": "Generates or inspects a signed Saporo on-prem license JWT via the on-prem repo's Go licenser CLI.",
+			"descriptionIntro": "The CLI supports a set of flags for generating a license, including:",
+			"descriptionBullets": [
+				"required customer name, AD object count, and future expiration date in YYYY-MM-DD format",
+				"a license tier of poc, core, or enterprise",
+				"toggles for AD, Azure, AWS, Okta, ADCS, WinLocal, AD file share, and LLM features, with at least one primary data source required",
+				"an output file path for the signed license, and a separate inspect mode for reading an existing license token"
+			],
+			"howToUse": [
+				"Confirm the customer name, expiration date, AD object limit, tier, enabled data sources, LLM setting, and output file path with the user.",
+				"Run the Go CLI from on-prem/devops/licenser with GOWORK=off and the confirmed flags to produce the signed license file.",
+				"Optionally verify the generated license by re-running the CLI in inspect mode against the written file."
+			],
+			"tags": [
+				"licensing",
+				"go",
+				"jwt",
+				"on-prem",
+				"cli"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "port-fix-to-branch",
+			"categoryId": "frontend",
+			"name": "port-fix-to-branch",
+			"invocation": "auto",
+			"description": "Replays a fix that landed on one branch (e.g. develop) onto a diverged release branch, and resolves the rebase/merge conflicts that follow. Use when the user needs to apply the same change to a release branch (release/4.2.0.x, SPR-XXXX_4.2), cherry-pick across diverged branches, continue a rebase, or resolve merge conflicts after a branch was merged/squashed.",
+			"location": "frontend/.cursor/skills/port-fix-to-branch/SKILL.md",
+			"summary": "Replays an already-merged fix onto a diverged release branch via cherry-pick or rebase, resolving conflicts.",
+			"descriptionIntro": "It picks the right approach based on how much the branches have diverged:",
+			"descriptionBullets": [
+				"cherry-picking the commit(s) when the fix is a few clean commits and branches haven't diverged much",
+				"manually re-applying the fix as a fresh change when diffs won't apply cleanly",
+				"rebasing onto the updated base and resolving conflicts when the target branch was made off a since-merged (often squashed) feature branch"
+			],
+			"howToUse": [
+				"Confirm the source of the fix, the target branch, and the base to rebase onto, and create a backup branch before any risky rebase.",
+				"Decide between cherry-picking, manually re-applying the fix, or rebasing based on how far the branches have diverged.",
+				"Resolve any conflicts by preserving intentional work on both sides, watching for recurring trouble spots like license/permission files and generated files.",
+				"Verify the result with git status, log, and a diff against the base branch, then report what was ported and how."
+			],
+			"tags": [
+				"git",
+				"rebase",
+				"cherry-pick",
+				"release-branch"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "adding-a-data-source",
+			"categoryId": "frontend",
+			"name": "adding-a-data-source",
+			"invocation": "auto",
+			"description": "Flat checklist of every frontend location that must be updated when onboarding a brand new data source/collector (like AD, AZ, AWS, Google, Okta, WinLocal, ADCS, ADFileShare) to the Saporo frontend. Use when the user asks to add a new data source, add a new collector, wire up a new source's admin config or inventory stats, or mentions onboarding a source like the ones above plus a hypothetical new one (e.g. Salesforce, Jamf, CrowdStrike).",
+			"location": "frontend/.cursor/skills/adding-a-data-source/SKILL.md",
+			"summary": "Checklist of every frontend location to update when onboarding a brand new data source/collector.",
+			"descriptionIntro": "It works through a fixed checklist covering every subsystem a new source touches:",
+			"descriptionBullets": [
+				"permissions and the shared display-name map",
+				"the Admin > Data Sources collector CRUD forms and config types",
+				"the Inventory page's cards, charts, and blade previews",
+				"the node type, icon, and color registry used across the graph",
+				"the independent Controls and Findings source filter lists",
+				"the Cypher query builder's autocomplete and sort order maps, plus dashboard chart data maps and logs/user-management integration where applicable"
+			],
+			"howToUse": [
+				"Confirm the backend already exposes the new source under a lowercase key across the relevant endpoints, since the license (not node counts) gates when the new source's UI appears.",
+				"Work through the checklist in order across permissions, admin collector CRUD, inventory, node/icon/color registry, Controls/Findings filters, and the Cypher query builder, since later steps assume earlier ones exist.",
+				"Verify by checking svelte-check, exercising the new source in Admin, Inventory, Controls/Findings, and the Cypher editor, and running the self-code-review skill before opening the PR."
+			],
+			"tags": [
+				"data-source",
+				"collector",
+				"onboarding",
+				"checklist"
+			],
+			"interactive": false,
+			"dependsOn": [
+				"self-code-review"
+			],
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "datatable-cell-consolidation",
+			"categoryId": "frontend",
+			"name": "datatable-cell-consolidation",
+			"invocation": "auto",
+			"description": "Consolidate duplicated DataTable cell components in src/components/ui/table/data-table/table-cell into one config-map-driven base cell selected by a typed column prop. Use when the user asks to merge/unify/dedupe table-cell components, refactor *Cell.svelte clones, or add a new variant of an existing cell (comment, chip, badge, icon, slider) instead of cloning a component.",
+			"location": "frontend/.cursor/skills/datatable-cell-consolidation/SKILL.md",
+			"summary": "Merges near-identical DataTable cell components into one config-map-driven base cell picked by a typed prop.",
+			"descriptionIntro": "It follows a consistent set of rules for merging near-identical cell components, such as:",
+			"descriptionBullets": [
+				"only consolidating cells that share real behavior, not ones that merely look similar",
+				"putting the variant union type in a script module block with a Record<Variant, Config> map",
+				"adding the new variant prop to DataTableColumn so it flows through the column config",
+				"preserving each original variant's exact behavior, verified against the deleted files' git history",
+				"ending with svelte-check and the svelte-autofixer MCP tool on every edited cell"
+			],
+			"howToUse": [
+				"Find every consumer of the formatter keys and component names being merged.",
+				"Diff the variants to capture their per-entity differences as a config table.",
+				"Write the base cell with a module-level variant union type and a Record config map.",
+				"Add the new variant prop to DataTableColumn in data-table.d.ts.",
+				"Delete the old clone components and clean up the index.ts barrel and formatters map.",
+				"Migrate column configs to the shared formatter key plus the new variant prop.",
+				"Verify with ReadLints, svelte-check, and the svelte-autofixer MCP tool."
+			],
+			"tags": [
+				"datatable",
+				"svelte",
+				"refactoring",
+				"consolidation"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "weekly-linear-pr-updates",
+			"categoryId": "frontend",
+			"name": "weekly-linear-pr-updates",
+			"invocation": "auto",
+			"description": "Collects the user's Saporo-SA/frontend PRs from the previous Wednesday through end of the current Tuesday, groups them by Linear project and issue, previews nested draft status updates in chat, and posts only after explicit user confirmation. Excludes closed-without-merge PRs. Optionally (opt-in each run) also builds a Cursor Canvas dashboard of per-project progress/risk and the user's open frontend-labeled issues. Use when the user asks for a weekly PR digest, Tuesday evening project updates, Linear status updates from PRs, or to rerun the weekly work summary workflow.",
+			"location": "frontend/.cursor/skills/weekly-linear-pr-updates/SKILL.md",
+			"summary": "Drafts weekly per-project Linear status updates from the user's frontend PRs, previewing before posting.",
+			"descriptionIntro": "Beyond the core digest, the skill enforces several guarantees:",
+			"descriptionBullets": [
+				"resolves the correct Wednesday-to-Tuesday window in the user's local timezone before converting to UTC for filtering",
+				"always excludes closed-without-merge PRs from the digest",
+				"never calls save_status_update until the user has explicitly previewed and confirmed every draft",
+				"flags unticketed PRs for manual project assignment instead of guessing",
+				"optionally builds a dated Canvas dashboard of per-project health and the user's personal backlog, only when opted into for that run"
+			],
+			"howToUse": [
+				"Run prerequisite checks for Linear MCP access and GitHub-Linear PR sync, stopping with a setup prompt if anything is missing.",
+				"Resolve the user's identity and ask whether they also want the optional project health and personal backlog dashboard for this run.",
+				"Resolve the user's local timezone and compute the current Wednesday-to-Tuesday date window, converting it to UTC for filtering.",
+				"Collect all PRs for the repo via list_diffs, paginating fully, then filter to the user's PRs within the date window.",
+				"Extract ticket IDs and resolve each to its Linear project, asking the user to assign a project for any PR with no ticket.",
+				"Group PRs by Linear project and issue and draft the nested status update body for each project.",
+				"If the dashboard was opted into, collect per-project progress and schedule data, compute a suggested on-track/at-risk/off-track health, gather the user's open frontend-labeled issues, and build a dated Canvas dashboard.",
+				"Pause to preview every draft (and the dashboard and suggested health, if built) in chat and wait for explicit user confirmation, revising and re-previewing if changes are requested.",
+				"Only after confirmation, post one status update per Linear project using the user-confirmed health value."
+			],
+			"tags": [
+				"linear",
+				"pull-requests",
+				"weekly-digest",
+				"canvas"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "saporo-workflow-authoring",
+			"categoryId": "on-prem",
+			"name": "saporo-workflow-authoring",
+			"invocation": "auto",
+			"description": "Use when adding, reviewing, or fixing Saporo n8n seed workflows in on-prem, including workflow JSON placement, first-party Saporo nodes, suggested_workflows control TOML wiring, seed metadata, and AD/Explore remediation patterns.",
+			"location": "on-prem/.claude/skills/saporo-workflow-authoring/SKILL.md",
+			"note": "A thin wrapper also exists at on-prem/.codex/skills/saporo-workflow-authoring/SKILL.md that simply instructs readers to follow this canonical .claude/skills version.",
+			"summary": "Rules and file map for authoring/fixing checked-in n8n seed workflows in on-prem, covering node choice, TOML wiring, and validation.",
+			"howToUse": [
+				"Locate the core files first: the active/disabled seed workflow JSON directories, the Saporo custom nodes package, the seed/import script, and the control TOML that maps suggested workflows.",
+				"Follow the workflow JSON rules when creating or editing a workflow: use a stable short kebab-case id, set a real name and description, default active to false, bump the seed version, flag customer-credential requirements, and strip local tag objects or credential IDs.",
+				"Prefer first-party Saporo nodes (Saporo, Saporo AD, Saporo EntraID, Saporo ARM) over Execute Workflow subworkflows or hiding logic in Code nodes for ordinary remediation actions.",
+				"Apply the AD and Graph patterns: use Saporo AD for LDAP operations and the Saporo node's Explore resource for graph-backed lookups instead of direct Memgraph/Bolt access.",
+				"Wire product suggestions for a control by adding the workflow's id to suggested_workflows in that control's config.toml, after confirming the workflow JSON exists and is a customer-ready (non-disabled, non-helper) workflow.",
+				"Before committing, run the node build and verify-build commands, validate workflow JSON with jq, run the control manifest Go test, and inspect exported JSON for accidental local ids, credentials, or executeWorkflow nodes."
+			],
+			"tags": [
+				"n8n",
+				"workflows",
+				"on-prem",
+				"saporo-nodes",
+				"toml",
+				"remediation"
+			],
+			"interactive": false,
+			"updated": "2026-07-13"
+		},
+		{
+			"id": "saporo-licenser-on-prem",
+			"categoryId": "on-prem",
+			"name": "saporo-licenser",
+			"invocation": "auto",
+			"description": "Generates signed Saporo on-prem license files (JWT) via the internal Go CLI in devops/licenser. Use when the user asks for a new license, license.txt, licenser, AD/Azure tier flags, or inspecting an existing license token.",
+			"location": "on-prem/.cursor/skills/saporo-licenser/SKILL.md -> ../../../skills/saporo-licenser/SKILL.md (shared)",
+			"shared": true,
+			"note": "Reached via a symlink (on-prem/.cursor/skills/saporo-licenser -> ../../../skills/saporo-licenser) pointing to a shared copy outside the on-prem repo, in workspace/skills/; a separate, independently-diverged copy also exists directly inside the frontend repo (categoryId frontend), which is a distinct catalog entry, not this one.",
+			"summary": "Walks through running the on-prem devops/licenser Go CLI to generate or inspect signed Saporo license JWTs.",
+			"howToUse": [
+				"Confirms the customer name, expiration date (converted to YYYY-MM-DD), AD object limit, tier, enabled data sources, LLM setting, and output file path with the user before proceeding.",
+				"Runs the license-generation command with GOWORK=off from on-prem/devops/licenser, requesting permissions if the sandbox lacks Go.",
+				"Optionally verifies the generated license by inspecting it with the -i flag on the written file."
+			],
+			"tags": [
+				"licensing",
+				"jwt",
+				"go-cli",
+				"on-prem",
+				"devops"
+			],
+			"interactive": true,
+			"updated": "2026-07-13"
 		}
 	]
 }

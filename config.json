@@ -13,6 +13,37 @@
 			"color": "#49cc90",
 			"description": "Skills committed to a specific project's repo, shared with anyone working in it.",
 			"scanPaths": ["./skills/**/SKILL.md"]
+		},
+		{
+			"id": "cursor-builtin",
+			"name": "Cursor Built-in",
+			"color": "#fca130",
+			"description": "Skills Cursor itself ships as built-in product features, distinct from anything the user authored.",
+			"scanPaths": ["~/.cursor/skills-cursor/**/SKILL.md"]
+		},
+		{
+			"id": "plugins",
+			"name": "Plugins",
+			"color": "#9012fe",
+			"description": "Skills bundled inside marketplace plugins installed into Cursor's plugin cache.",
+			"scanPaths": ["~/.cursor/plugins/cache/**/skills/**/SKILL.md"]
+		},
+		{
+			"id": "frontend",
+			"name": "Frontend",
+			"color": "#f93e3e",
+			"description": "Skills committed to the Saporo-SA/frontend repo, shared with anyone working in it.",
+			"scanPaths": ["~/Development/Saporo_Labs/workspace/frontend/.cursor/skills/**/SKILL.md"]
+		},
+		{
+			"id": "on-prem",
+			"name": "On-Prem",
+			"color": "#50e3c2",
+			"description": "Skills committed to (or shared into) the Saporo-SA/on-prem repo, shared with anyone working in it.",
+			"scanPaths": [
+				"~/Development/Saporo_Labs/workspace/on-prem/.claude/skills/**/SKILL.md",
+				"~/Development/Saporo_Labs/workspace/on-prem/.cursor/skills/**/SKILL.md"
+			]
 		}
 	]
 }
