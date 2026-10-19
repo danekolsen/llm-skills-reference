@@ -102,6 +102,32 @@ describe("applyCatalogEdits", () => {
 		]);
 	});
 
+	it("removes the specified scanPaths from a category, leaving the rest untouched", () => {
+		writeFileSync(
+			configPath,
+			JSON.stringify({
+				categories: [{ ...baseConfig.categories[0], scanPaths: ["~/.cursor/skills/**/SKILL.md", "~/old-repo/.cursor/skills/**/SKILL.md"] }]
+			})
+		);
+		writePayload({ scanPathRemovals: [{ categoryId: "personal", scanPaths: ["~/old-repo/.cursor/skills/**/SKILL.md"] }] });
+
+		const summary = applyCatalogEdits(configPath, dataPath, payloadPath);
+
+		expect(summary.scanPathsRemoved).toEqual([{ categoryId: "personal", scanPaths: ["~/old-repo/.cursor/skills/**/SKILL.md"] }]);
+		expect(readConfig()).toEqual(baseConfig);
+	});
+
+	it("moves a scan location in one payload by pairing an addition with a removal", () => {
+		writePayload({
+			scanPathAdditions: [{ categoryId: "personal", scanPaths: ["~/new-home/skills/**/SKILL.md"] }],
+			scanPathRemovals: [{ categoryId: "personal", scanPaths: ["~/.cursor/skills/**/SKILL.md"] }]
+		});
+
+		applyCatalogEdits(configPath, dataPath, payloadPath);
+
+		expect(readConfig().categories[0]?.scanPaths).toEqual(["~/new-home/skills/**/SKILL.md"]);
+	});
+
 	it("merges update changes into an existing skill without disturbing other fields", () => {
 		writePayload({ updates: [{ id: "skill-a", changes: { description: "new desc", status: "Draft PR #42" } }] });
 
@@ -144,6 +170,7 @@ describe("applyCatalogEdits", () => {
 		expect(summary).toEqual({
 			categoriesAdded: ["on-prem"],
 			scanPathsAdded: [{ categoryId: "on-prem", scanPaths: ["on-prem/.claude/skills/**/SKILL.md"] }],
+			scanPathsRemoved: [],
 			skillsAdded: ["skill-new"],
 			skillsRemoved: ["skill-stale"],
 			skillsUpdated: ["skill-a"],
@@ -194,6 +221,20 @@ describe("applyCatalogEdits", () => {
 		writePayload({ scanPathAdditions: [{ categoryId: "ghost-category", scanPaths: ["x/**/SKILL.md"] }] });
 
 		expect(() => applyCatalogEdits(configPath, dataPath, payloadPath)).toThrow(/unknown category "ghost-category"/);
+		expect(readConfig()).toEqual(baseConfig);
+	});
+
+	it("throws when a scanPathRemoval targets an unknown category", () => {
+		writePayload({ scanPathRemovals: [{ categoryId: "ghost-category", scanPaths: ["x/**/SKILL.md"] }] });
+
+		expect(() => applyCatalogEdits(configPath, dataPath, payloadPath)).toThrow(/unknown category "ghost-category"/);
+		expect(readConfig()).toEqual(baseConfig);
+	});
+
+	it("throws and leaves config.json untouched when a scanPathRemoval names a path that isn't declared", () => {
+		writePayload({ scanPathRemovals: [{ categoryId: "personal", scanPaths: ["~/typo/**/SKILL.md"] }] });
+
+		expect(() => applyCatalogEdits(configPath, dataPath, payloadPath)).toThrow(/Cannot remove scanPath "~\/typo\/\*\*\/SKILL.md" from "personal"/);
 		expect(readConfig()).toEqual(baseConfig);
 	});
 

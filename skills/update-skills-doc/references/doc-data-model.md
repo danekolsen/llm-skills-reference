@@ -142,6 +142,8 @@ IDE built-ins, plugin caches, other workspace repos — or "none found")
 ### Missing scan locations (found on disk, not declared in config.json)
 - <location> — <what's there, how many skills> → proposed: new category
   {id, name, color, description, scanPaths} | add to <category>'s scanPaths
+- <category> / <scanPath> — walked to 0 skills (moved to <new location> |
+  deleted) → proposed: remove from <category>'s scanPaths
 
 ### Add (on disk, missing from catalog)
 - <category> / <name> — <one-line why> → proposed entry: {full object,

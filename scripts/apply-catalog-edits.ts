@@ -12,7 +12,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
  * six buckets"). A payload is a batch of already-approved operations — this script never
  * decides what belongs in it, it only applies it safely.
  *
- *   (0) MISSING SCAN LOCATION -> newCategories | scanPathAdditions
+ *   (0) MISSING SCAN LOCATION -> newCategories | scanPathAdditions | scanPathRemovals (moved/gone)
  *   (a) ADD                   -> additions
  *   (b) CATALOG-ONLY          -> removals (only ids the user explicitly approved removing)
  *   (c) BADGE/STATUS drift    -> updates
@@ -20,6 +20,11 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
  *   (e) CATEGORY SCOPE drift  -> categoryReassignments (plus newCategories for the split halves)
  */
 export interface ScanPathAddition {
+	categoryId: string;
+	scanPaths: string[];
+}
+
+export interface ScanPathRemoval {
 	categoryId: string;
 	scanPaths: string[];
 }
@@ -37,6 +42,7 @@ export interface CategoryReassignment {
 export interface CatalogEditsPayload {
 	newCategories?: Category[];
 	scanPathAdditions?: ScanPathAddition[];
+	scanPathRemovals?: ScanPathRemoval[];
 	additions?: Skill[];
 	removals?: string[];
 	updates?: SkillUpdate[];
@@ -46,6 +52,7 @@ export interface CatalogEditsPayload {
 export interface ApplySummary {
 	categoriesAdded: string[];
 	scanPathsAdded: ScanPathAddition[];
+	scanPathsRemoved: ScanPathRemoval[];
 	skillsAdded: string[];
 	skillsRemoved: string[];
 	skillsUpdated: string[];
@@ -77,7 +84,8 @@ function writeJsonFile(path: string, value: unknown): void {
 /**
  * Mutates `config` and `data` in place, applying every operation present in `payload`, in a
  * fixed order chosen so later steps can reference what earlier steps just created (e.g. a
- * scanPathAddition targeting a category from this same payload's newCategories). Throws
+ * scanPathAddition targeting a category from this same payload's newCategories, or a
+ * scanPathRemoval retiring a location that this same payload's additions replace). Throws
  * before mutating further if a referenced id doesn't exist — callers should treat any throw
  * as "nothing should be considered applied", which is why `applyCatalogEdits` below only
  * writes to disk after this function returns successfully.
@@ -86,6 +94,7 @@ function mutate(config: Config, data: Data, payload: CatalogEditsPayload): Apply
 	const summary: ApplySummary = {
 		categoriesAdded: [],
 		scanPathsAdded: [],
+		scanPathsRemoved: [],
 		skillsAdded: [],
 		skillsRemoved: [],
 		skillsUpdated: [],
@@ -110,6 +119,20 @@ function mutate(config: Config, data: Data, payload: CatalogEditsPayload): Apply
 		if (newPaths.length > 0) {
 			summary.scanPathsAdded.push({ categoryId: addition.categoryId, scanPaths: newPaths });
 		}
+	}
+
+	for (const removal of payload.scanPathRemovals ?? []) {
+		const category = config.categories.find((existing) => existing.id === removal.categoryId);
+		if (!category) {
+			throw new Error(`Cannot remove scanPaths from unknown category "${removal.categoryId}"`);
+		}
+		for (const path of removal.scanPaths) {
+			if (!category.scanPaths.includes(path)) {
+				throw new Error(`Cannot remove scanPath "${path}" from "${removal.categoryId}": it isn't declared there`);
+			}
+		}
+		category.scanPaths = category.scanPaths.filter((path) => !removal.scanPaths.includes(path));
+		summary.scanPathsRemoved.push({ categoryId: removal.categoryId, scanPaths: removal.scanPaths });
 	}
 
 	for (const reassignment of payload.categoryReassignments ?? []) {
@@ -191,6 +214,9 @@ function printSummary(summary: ApplySummary, dryRun: boolean): void {
 	if (summary.categoriesAdded.length > 0) lines.push(`Categories added: ${summary.categoriesAdded.join(", ")}`);
 	for (const entry of summary.scanPathsAdded) {
 		lines.push(`ScanPaths added to "${entry.categoryId}": ${entry.scanPaths.join(", ")}`);
+	}
+	for (const entry of summary.scanPathsRemoved) {
+		lines.push(`ScanPaths removed from "${entry.categoryId}": ${entry.scanPaths.join(", ")}`);
 	}
 	if (summary.skillsAdded.length > 0) lines.push(`Skills added: ${summary.skillsAdded.join(", ")}`);
 	if (summary.skillsUpdated.length > 0) lines.push(`Skills updated: ${summary.skillsUpdated.join(", ")}`);
