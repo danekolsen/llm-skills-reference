@@ -181,7 +181,9 @@ accurate, or one of the six drift buckets:
   proposed category is scoped to that one repo and named for it — never
   merged into an existing category that already covers a *different* repo.
   Skills found there fall into bucket (a) once the location itself is
-  approved.
+  approved. The reverse is drift too: a declared `scanPath` that walked to
+  zero skills because its location moved or was deleted → propose removing it
+  (paired with an addition for the new location when it moved).
 - **(a) ADD** — on disk, missing from the catalog → new entry to add.
 - **(b) CATALOG-ONLY** — in `data.json`, absent from disk → surface as an
   unmerged branch, rename, or deletion. Recommend; **never remove on your
@@ -254,8 +256,8 @@ dozens of fields, which is exactly the shape of edit that's error-prone to
 hand-patch as text).
 
 Translate every approved review item into one `CatalogEditsPayload` object —
-its exact shape (`newCategories`, `scanPathAdditions`, `additions`,
-`removals`, `updates`, `categoryReassignments`) is documented as JSDoc on that
+its exact shape (`newCategories`, `scanPathAdditions`, `scanPathRemovals`,
+`additions`, `removals`, `updates`, `categoryReassignments`) is documented as JSDoc on that
 type in `scripts/apply-catalog-edits.ts`, with one field per drift bucket from
 step 4. New `additions` entries should carry the deep fields derived in step 2
 (`location`, `tags`, and `descriptionIntro`/`descriptionBullets`/`howToUse`
@@ -273,7 +275,7 @@ npx tsx scripts/apply-catalog-edits.ts /tmp/catalog-edits.json --dry-run
 
 The dry run applies every operation in memory, validates the result with the
 same rules `npm run build` enforces, and prints the exact summary (categories
-added, scanPaths added, skills added/updated/removed/reassigned) without
+added, scanPaths added/removed, skills added/updated/removed/reassigned) without
 writing anything — use it to confirm the payload does exactly what the review
 promised before committing to it. A validation failure here means a bad
 payload (e.g. a typo'd `categoryId`), not a bad catalog; fix the payload and
